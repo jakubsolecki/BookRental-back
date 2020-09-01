@@ -2,16 +2,15 @@ package pl.jsol.bookrental.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
-@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,10 +22,31 @@ public class Book {
     @NonNull
     private String author;
 
-    @NonNull
-    private String isbn;
-
     //TODO: enum
     @NonNull
     private String genre;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private final Set<Copy> copies = new HashSet<>();
+
+    public boolean addCopy(Copy copy) {
+        return copies.add(copy);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id.equals(book.id) &&
+                title.equals(book.title) &&
+                author.equals(book.author) &&
+                genre.equals(book.genre) &&
+                copies.equals(book.copies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, author, genre, copies);
+    }
 }
