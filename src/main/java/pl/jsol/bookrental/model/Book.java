@@ -22,9 +22,8 @@ public class Book {
     @NonNull
     private String author;
 
-    //TODO: enum
     @NonNull
-    private String genre;
+    private Genre genre;
 
     @OneToMany(fetch = FetchType.LAZY)
     private final Set<Copy> copies = new HashSet<>();

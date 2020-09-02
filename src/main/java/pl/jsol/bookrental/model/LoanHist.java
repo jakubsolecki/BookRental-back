@@ -30,7 +30,7 @@ public class LoanHist {
     @NonNull
     private LocalDate dueDate;
 
-    @NotNull
+    @NonNull
     private LocalDate inDate;
 
     private BigDecimal penalty;

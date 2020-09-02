@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.jsol.bookrental.dal.repository.BookRepository;
 import pl.jsol.bookrental.model.Book;
+import pl.jsol.bookrental.model.Genre;
 
 import javax.annotation.PostConstruct;
 
@@ -18,7 +19,7 @@ public class MockData {
             bookRepository.save(new Book(
                     "Title " + i,
                     "Author " + i,
-                    "Other"
+                    Genre.parseGenre("Other")
             ));
         }
     }
