@@ -6,9 +6,10 @@ import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/book")
+@RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
@@ -24,8 +25,13 @@ public class BookController {
     }
 
     @GetMapping(path = "{id}")
-    public Book getBookById(@PathVariable("id") Long id) {
-        return bookService.getBookById(id).orElse(null);
+    public Optional<Book> getBookById(@PathVariable Long id) {
+        return bookService.getBookById(id);
+    }
+
+    @GetMapping(path = "/title")
+    public Optional<Book> getBookByTitle(@RequestParam(value = "title") String title) {
+        return bookService.getBookByTitle(title);
     }
 
 }

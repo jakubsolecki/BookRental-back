@@ -1,6 +1,7 @@
 package pl.jsol.bookrental.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import pl.jsol.bookrental.dal.repository.BookRepository;
 import pl.jsol.bookrental.model.Book;
@@ -23,5 +24,11 @@ public class BookService {
 
     public Optional<Book> getBookById(Long id) {
         return bookRepository.findById(id);
+    }
+
+    public Optional<Book> getBookByTitle(String title) {
+        Book titledBook = new Book();
+        titledBook.setTitle(title);
+        return bookRepository.findOne(Example.of(titledBook));
     }
 }
