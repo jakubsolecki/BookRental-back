@@ -12,6 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
