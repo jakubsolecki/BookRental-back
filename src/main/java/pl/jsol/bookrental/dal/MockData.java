@@ -16,11 +16,12 @@ public class MockData {
     @PostConstruct
     public void dataInit() {
         for (int i = 0; i < 10; i++) {
-            bookRepository.save(new Book(
-                    "Title " + i,
-                    "Author " + i,
-                    Genre.parseGenre("Other")
-            ));
+            bookRepository.save(Book.builder()
+                    .title("Title " + i)
+                    .author("Author " + i)
+                    .genre(Genre.parseGenre("Other"))
+                    .build()
+            );
         }
     }
 }

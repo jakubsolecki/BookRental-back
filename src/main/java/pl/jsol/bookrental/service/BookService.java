@@ -22,7 +22,6 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    //TODO: remove optional. Add defaults in controller
     public Page<Book> getBooks(
             Optional<Integer> page,
             Optional<Integer> quantity,

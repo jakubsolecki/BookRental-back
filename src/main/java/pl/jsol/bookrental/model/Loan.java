@@ -1,17 +1,13 @@
 package pl.jsol.bookrental.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

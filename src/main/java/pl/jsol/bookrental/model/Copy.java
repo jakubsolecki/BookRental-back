@@ -5,15 +5,15 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Data
 @NoArgsConstructor
-@Getter
 public class Copy {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
     @NonNull
-    private int copy_no;
+    private Integer copy_no;
 
     @ManyToOne
     @NonNull

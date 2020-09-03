@@ -5,19 +5,18 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NonNull
-    private String firstname;
+    private String firstName;
 
     @NonNull
-    private String lastname;
+    private String lastName;
 
     @NonNull
     private String phone;

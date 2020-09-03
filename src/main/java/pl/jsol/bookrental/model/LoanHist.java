@@ -1,19 +1,14 @@
 package pl.jsol.bookrental.model;
 
-import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
 public class LoanHist {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -4,14 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 @Builder
 public class Book {
     @Id
@@ -34,20 +32,7 @@ public class Book {
         return copies.add(copy);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return id.equals(book.id) &&
-                title.equals(book.title) &&
-                author.equals(book.author) &&
-                genre.equals(book.genre) &&
-                copies.equals(book.copies);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, author, genre, copies);
+    public int getRemainingCopies() {
+        return copies.size();
     }
 }
