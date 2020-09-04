@@ -3,8 +3,7 @@ package pl.jsol.bookrental.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -32,7 +31,19 @@ public class Book {
         return copies.add(copy);
     }
 
-    public int getRemainingCopies() {
+    public int getCopiesQuantity() {
         return copies.size();
+    }
+
+    public Copy getNextAvailableCopy() throws NoSuchElementException {
+        Iterator<Copy> it = copies.iterator();
+        while(it.hasNext()) {
+            Copy copy = it.next();
+            if(copy.isAvailable()) {
+                return copy;
+            }
+            it.next();
+        }
+        throw new NoSuchElementException("No copies available!");
     }
 }

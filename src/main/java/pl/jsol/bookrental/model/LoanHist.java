@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Data
@@ -20,7 +21,7 @@ public class LoanHist {
 
     @ManyToOne
     @NonNull
-    private Book book;
+    private Copy copy;
 
     @NonNull
     private LocalDate dueDate;
@@ -32,8 +33,14 @@ public class LoanHist {
 
     private String comments;
 
-    public void setPenalty(BigDecimal penalty) {
-        this.penalty = penalty;
+    public LoanHist(Loan loan) {
+        member = loan.getMember();
+        copy = loan.getCopy();
+        dueDate = loan.getDueDate();
+        inDate = LocalDate.now();
+        Period diff = Period.between(inDate, dueDate);
+        penalty = diff.isNegative() ? new BigDecimal(diff.getDays()) : new BigDecimal(0);
+        loan.setCopyAvailability(true);
     }
 
     public void setComments(String comments) {

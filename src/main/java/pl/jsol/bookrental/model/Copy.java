@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Copy {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     @NonNull
     private Integer copy_no;
@@ -19,8 +19,11 @@ public class Copy {
     @NonNull
     private Book book;
 
+    private boolean available = true;
+
     public Copy(Book book) {
         this.book = book;
-        this.copy_no = book.getCopies().size() + 1;
+        this.copy_no = book.getCopiesQuantity() + 1;
+        book.addCopy(this);
     }
 }
