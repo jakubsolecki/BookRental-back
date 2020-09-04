@@ -36,13 +36,14 @@ public class Book {
     }
 
     public Copy getNextAvailableCopy() throws NoSuchElementException {
-        Iterator<Copy> it = copies.iterator();
-        while(it.hasNext()) {
-            Copy copy = it.next();
-            if(copy.isAvailable()) {
+        if(copies.isEmpty()) {
+            throw new NoSuchElementException("No copies available!");
+        }
+
+        for (Copy copy : copies) {
+            if (copy.isAvailable()) {
                 return copy;
             }
-            it.next();
         }
         throw new NoSuchElementException("No copies available!");
     }

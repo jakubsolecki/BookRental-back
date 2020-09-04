@@ -42,8 +42,4 @@ public class LoanHist {
         penalty = diff.isNegative() ? new BigDecimal(diff.getDays()) : new BigDecimal(0);
         loan.setCopyAvailability(true);
     }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
 }
