@@ -38,8 +38,8 @@ public class LoanHist {
         copy = loan.getCopy();
         dueDate = loan.getDueDate();
         inDate = LocalDate.now();
-        Period diff = Period.between(inDate, dueDate);
-        penalty = diff.isNegative() ? new BigDecimal(diff.getDays()) : new BigDecimal(0);
+        Period diff = Period.between(dueDate, inDate);
+        penalty = diff.isNegative() ? new BigDecimal(0) : new BigDecimal(diff.getDays());
         loan.setCopyAvailability(true);
     }
 }

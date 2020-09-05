@@ -14,11 +14,12 @@ class BookrentalApplicationTests {
     @Test
     void contextLoads() {
 //        System.out.println(Genre.parseGenre("fantasy"));
-        LocalDate dueDate = LocalDate.now();
-        LocalDate inDate = dueDate.minusDays(1);
-        Period period = Period.between(inDate, dueDate);
-        System.out.println(period.isNegative());
-        System.out.println(new BigDecimal(period.getDays()));
+//        LocalDate dueDate = LocalDate.now();
+//        LocalDate inDate = dueDate.minusDays(1);
+//        Period period = Period.between(inDate, dueDate);
+//        System.out.println(period.isNegative());
+//        System.out.println(new BigDecimal(period.getDays()));
+        System.out.println(new BigDecimal(3));
     }
 
 

@@ -21,7 +21,7 @@ public class BookTests {
     private Copy copy2;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         book = Book.builder()
                 .title("Title 1")
                 .author("Author 1")
@@ -37,45 +37,38 @@ public class BookTests {
     public void addCopyTest() {
 
         // when then
-        assertEquals(book.getCopiesQuantity(), 0);
+        assertEquals(0, book.getCopiesQuantity());
         assertTrue(book.addCopy(copy1));
-        assertEquals(book.getCopiesQuantity(), 1);
+        assertEquals(1, book.getCopiesQuantity());
     }
 
     @Test
     public void getNextAvailableCopyTest() {
 
-        // given
         when(copy1.isAvailable()).thenReturn(false);
         when(copy2.isAvailable()).thenReturn(true);
         book.addCopy(copy1);
         book.addCopy(copy2);
 
-        // when then
-        assertEquals(book.getNextAvailableCopy(), copy2);
+        assertEquals(copy2, book.getNextAvailableCopy());
     }
 
     @Test
-    public void getNextAvailableCopyExceptionTest() {
+    public void getNextAvailableCopy_NoneAvailable_ExceptionThrown() {
 
-        // given
         when(copy1.isAvailable()).thenReturn(false);
         when(copy2.isAvailable()).thenReturn(false);
         book.addCopy(copy1);
         book.addCopy(copy2);
 
-        // when then
         Assertions.assertThrows(NoSuchElementException.class, () -> {
             book.getNextAvailableCopy();
         });
     }
 
     @Test
-    public void getNextAvailableCopyNullTest() {
+    public void getNextAvailableCopy_NoCopies_ExceptionThrown() {
 
-        // given no copies
-
-        // when then
         Assertions.assertThrows(NoSuchElementException.class, () -> {
             book.getNextAvailableCopy();
         });
