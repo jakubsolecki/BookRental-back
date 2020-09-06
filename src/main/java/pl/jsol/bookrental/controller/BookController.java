@@ -16,24 +16,4 @@ import java.util.Optional;
 public class BookController {
     private final BookService bookService;
 
-    @PostMapping("/add")
-    public Book addBook(@RequestBody Book book) {
-        return bookService.addBook(book);
-    }
-
-    @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
-    }
-
-    @GetMapping(path = "{id:[\\d]+}") // only numeric IDs
-    public Optional<Book> getBookById(@PathVariable Long id) {
-        return bookService.getBookById(id);
-    }
-
-    @GetMapping(path = "/title")
-    public Optional<Book> getBookByTitle(@RequestParam(value = "title") String title) {
-        return bookService.getBookByTitle(title);
-    }
-
 }

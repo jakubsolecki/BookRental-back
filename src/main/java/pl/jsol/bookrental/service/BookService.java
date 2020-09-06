@@ -1,64 +1,54 @@
 package pl.jsol.bookrental.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import pl.jsol.bookrental.dal.repository.BookRepository;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.Genre;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
+
     private final BookRepository bookRepository;
 
-    public Book addBook(Book book) {
-        return bookRepository.save(book);
-    }
+    public Book addBook(String title, String author, String genre) {
+        if(StringUtils.isAnyEmpty(title, author, genre)) {
+            throw new IllegalArgumentException("Argument cannot be null or empty string!");
+        }
 
-    public Page<Book> getBooks(
-            Optional<Integer> page,
-            Optional<Integer> quantity,
-            Optional<Boolean> ascending,
-            Optional<String> sortBy,
-            Optional<String> title,
-            Optional<String> author,
-            Optional<Genre> genre
-    ) {
-        Book exampleBook = Book
-                .builder()
-                .title(title.orElse(null))
-                .author(author.orElse(null))
-                .genre(genre.orElse(null))
-                .build();
+        Book bookToAdd = new Book(title, author, Genre.parseGenre(genre));
 
-        return bookRepository.findAll(Example.of(exampleBook),
-                PageRequest.of(page.orElse(0),
-                        quantity.orElse(4),
-                        ascending.orElse(true) ?
-                            Sort.by(sortBy.orElse("title")).ascending().and(Sort.by("title")) :
-                            Sort.by(sortBy.orElse("title")).descending().and(Sort.by("title"))
-                )
-        );
-    }
-
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+        return bookRepository.save(bookToAdd);
     }
 
     public Optional<Book> getBookById(Long id) {
         return bookRepository.findById(id);
     }
 
-    public Optional<Book> getBookByTitle(String title) {
-        Book titledBook = Book.builder().title(title).build();
-        return bookRepository.findOne(Example.of(titledBook));
+    public Page<Book> findBooks(String title,
+                                String author,
+                                String genre,
+                                int size,
+                                int page,
+                                String sortStrategy,
+                                String sortBy) {
+        ExampleMatcher bookMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
+//        Book book = Book.builder2()
+//                .title(title)
+//                .author(author)
+//                .genre(Genre.parseGenre(genre))
+//                .build();
+        Book book  = new Book(title, author, Genre.parseGenre(genre));
+        Example<Book> example = Example.of((book), bookMatcher);
+        Pageable pageable = PageRequest.of(page, size,
+                sortStrategy.toLowerCase().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+
+        return bookRepository.findAll(example, pageable);
     }
 
 }

@@ -22,11 +22,13 @@ public class BookTests {
 
     @BeforeEach
     protected void setUp() {
-        book = Book.builder()
-                .title("Title 1")
-                .author("Author 1")
-                .genre(Genre.parseGenre("fantasy"))
-                .build();
+//        book = Book.builder2()
+//                .title("Title 1")
+//                .author("Author 1")
+//                .genre(Genre.parseGenre("fantasy"))
+//                .build();
+
+        new Book("Title 1", "Author 1", Genre.parseGenre("fantasy"));
 
         copy1 = Mockito.mock(Copy.class);
         copy2 = Mockito.mock(Copy.class);

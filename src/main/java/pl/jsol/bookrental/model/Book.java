@@ -6,10 +6,9 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@RequiredArgsConstructor
+@Getter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

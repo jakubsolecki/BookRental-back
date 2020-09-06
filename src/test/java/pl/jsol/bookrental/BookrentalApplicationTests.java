@@ -1,29 +1,33 @@
 package pl.jsol.bookrental;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.Genre;
 import pl.jsol.bookrental.model.Loan;
 import pl.jsol.bookrental.model.LoanHist;
+import pl.jsol.bookrental.service.BookService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
 @SpringBootTest
+@RequiredArgsConstructor
 class BookrentalApplicationTests {
+
+    @Autowired
+    private BookService bookService;
 
     @Test
     void contextLoads() {
-//        System.out.println(Genre.parseGenre("fantasy"));
-//        LocalDate dueDate = LocalDate.now();
-//        LocalDate inDate = dueDate.minusDays(1);
-//        Period period = Period.between(inDate, dueDate);
-//        System.out.println(period.isNegative());
-//        System.out.println(new BigDecimal(period.getDays()));
-        System.out.println(new BigDecimal(3));
-        LoanHist lh = new LoanHist(Mockito.mock(Loan.class));
+
+        Page<Book> pageOfBooks = bookService.findBooks("author", null, "null", 10, 0, "asc", "title");
+        System.out.println(pageOfBooks.get().findFirst());
     }
 
 
