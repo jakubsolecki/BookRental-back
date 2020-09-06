@@ -8,26 +8,27 @@ import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
 
     @ManyToOne
     @NonNull
-    private Member member;
+    protected Member member;
 
     @OneToOne
     @NonNull
-    private Copy copy;
+    protected Copy copy;
 
     @NonNull
     private LocalDate outDate;
 
     @NonNull
-    private LocalDate dueDate;
+    protected LocalDate dueDate;
 
     public Loan(Member member, Book book) throws CannotProceedException {
         Copy bookedCopy = null;
@@ -45,8 +46,8 @@ public class Loan {
         dueDate = outDate.plusDays(7);
     }
 
-    public void setCopyAvailability(boolean availability) {
-        copy.setAvailable(availability);
+    public void returnCopy() {
+        copy.setAvailable(true);
     }
 
     public void extendExpiryDate() {

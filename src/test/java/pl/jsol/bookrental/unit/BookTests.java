@@ -21,7 +21,7 @@ public class BookTests {
     private Copy copy2;
 
     @BeforeEach
-    public void setUp() {
+    protected void setUp() {
         book = Book.builder()
                 .title("Title 1")
                 .author("Author 1")

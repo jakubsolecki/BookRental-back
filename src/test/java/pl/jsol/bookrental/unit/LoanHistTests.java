@@ -19,7 +19,7 @@ public class LoanHistTests {
     private Loan loan;
 
     @BeforeEach
-    public void setUp() {
+    protected void setUp() {
         loan = Mockito.mock(Loan.class);
         when(loan.getMember()).thenReturn(Mockito.mock(Member.class));
         when(loan.getCopy()).thenReturn(Mockito.mock(Copy.class));

@@ -1,8 +1,11 @@
 package pl.jsol.bookrental;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.jsol.bookrental.model.Genre;
+import pl.jsol.bookrental.model.Loan;
+import pl.jsol.bookrental.model.LoanHist;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +23,7 @@ class BookrentalApplicationTests {
 //        System.out.println(period.isNegative());
 //        System.out.println(new BigDecimal(period.getDays()));
         System.out.println(new BigDecimal(3));
+        LoanHist lh = new LoanHist(Mockito.mock(Loan.class));
     }
 
 

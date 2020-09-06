@@ -8,29 +8,16 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Entity
-@Data
 @NoArgsConstructor
-public class LoanHist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-
-    @ManyToOne
-    @NonNull
-    private Member member;
-
-    @ManyToOne
-    @NonNull
-    private Copy copy;
-
-    @NonNull
-    private LocalDate dueDate;
-
+@Getter
+public class LoanHist extends Loan{
     @NonNull
     private LocalDate inDate;
 
+    @NonNull
     private BigDecimal penalty;
 
+    @Setter
     private String comments;
 
     public LoanHist(Loan loan) {
@@ -40,6 +27,12 @@ public class LoanHist {
         inDate = LocalDate.now();
         Period diff = Period.between(dueDate, inDate);
         penalty = diff.isNegative() ? new BigDecimal(0) : new BigDecimal(diff.getDays());
-        loan.setCopyAvailability(true);
+        loan.returnCopy();
     }
+
+    @Override
+    public void returnCopy() {}
+
+    @Override
+    public void extendExpiryDate() {}
 }
