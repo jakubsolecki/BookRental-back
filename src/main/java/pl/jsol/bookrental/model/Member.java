@@ -5,10 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@RequiredArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

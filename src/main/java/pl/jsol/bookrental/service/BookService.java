@@ -10,6 +10,9 @@ import pl.jsol.bookrental.model.Genre;
 
 import java.util.Optional;
 
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
+
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -30,25 +33,32 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public Page<Book> findBooks(String title,
-                                String author,
-                                String genre,
-                                int size,
-                                int page,
-                                String sortStrategy,
-                                String sortBy) {
-        ExampleMatcher bookMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
-//        Book book = Book.builder2()
-//                .title(title)
-//                .author(author)
-//                .genre(Genre.parseGenre(genre))
-//                .build();
-        Book book  = new Book(title, author, Genre.parseGenre(genre));
-        Example<Book> example = Example.of((book), bookMatcher);
-        Pageable pageable = PageRequest.of(page, size,
-                sortStrategy.toLowerCase().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-
-        return bookRepository.findAll(example, pageable);
+    public Page<Book> getAllBooks(int page, int size, String sort, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, sort.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        return bookRepository.findAll(pageable);
     }
+
+//    public Page<Book> findBooks(String title,
+//                                String author,
+//                                String genre,
+//                                int size,
+//                                int page,
+//                                String sortStrategy,
+//                                String sortBy) {
+//
+//        ExampleMatcher bookMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
+//
+//        bookMatcher = title.equals("") ? bookMatcher = bookMatcher.withIgnorePaths("title") : bookMatcher.withMatcher("title", startsWith());
+//        bookMatcher = author.equals("") ? bookMatcher = bookMatcher.withIgnorePaths("author") : bookMatcher.withMatcher("author", startsWith());
+//        bookMatcher = genre.equals("") ? bookMatcher = bookMatcher.withIgnorePaths("genre") : bookMatcher.withMatcher("genre", exact());
+//
+//        Book book  = new Book(title, author, Genre.parseGenre(genre));
+//        Example<Book> example = Example.of((book), bookMatcher);
+//        Pageable pageable = PageRequest.of(page, size,
+//                sortStrategy.toLowerCase().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+//
+//        return bookRepository.findAll(example, pageable);
+//    }
+
 
 }

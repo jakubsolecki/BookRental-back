@@ -9,6 +9,7 @@ import java.util.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
+@ToString
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,6 +24,7 @@ public class Book {
     @NonNull
     private Genre genre;
 
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY)
     private final Set<Copy> copies = new HashSet<>();
 

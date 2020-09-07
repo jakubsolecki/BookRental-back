@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
 @RequiredArgsConstructor
 class BookrentalApplicationTests {
@@ -26,8 +28,9 @@ class BookrentalApplicationTests {
     @Test
     void contextLoads() {
 
-        Page<Book> pageOfBooks = bookService.findBooks("author", null, "null", 10, 0, "asc", "title");
-        System.out.println(pageOfBooks.get().findFirst());
+//        Page<Book> pageOfBooks = bookService.findBooks("", "", "f", 10, 0, "asc", "title");
+//        assertTrue(pageOfBooks.hasContent());
+//        pageOfBooks.getContent().forEach(System.out::println);
     }
 
 

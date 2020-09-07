@@ -5,8 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Data
 @NoArgsConstructor
+@Getter
 public class Copy {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +19,7 @@ public class Copy {
     @NonNull
     private Book book;
 
+    @Setter
     private boolean available = true;
 
     public Copy(Book book) {
