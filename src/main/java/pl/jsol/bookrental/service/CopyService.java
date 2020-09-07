@@ -26,8 +26,8 @@ public class CopyService {
         return copyRepository.findById(id);
     }
 
-    public Page<Copy> getCopiesOfBook(Book book, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
-        return copyRepository.findCopiesOfBook(book, pageable);
-    }
+//    public Page<Copy> getCopiesOfBook(Book book, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
+//        return copyRepository.findCopiesOfBook(book, pageable);
+//    }
 }

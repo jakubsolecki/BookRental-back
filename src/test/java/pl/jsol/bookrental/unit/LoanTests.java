@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class LoanTests {
 
     @Test
-    public void newLoan_BookWithoutCopies_ExceptionThrown() {
+    public void newLoan_whenBookWithoutCopies_thenExceptionThrown() {
         Book book = Mockito.mock(Book.class);
         Member member = Mockito.mock(Member.class);
 

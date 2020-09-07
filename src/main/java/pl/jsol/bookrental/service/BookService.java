@@ -10,16 +10,13 @@ import pl.jsol.bookrental.model.Genre;
 
 import java.util.Optional;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
-
 @Service
 @RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
 
-    public Book addBook(String title, String author, String genre) {
+    public Book addBook(String title, String author, String genre){
         if(StringUtils.isAnyEmpty(title, author, genre)) {
             throw new IllegalArgumentException("Argument cannot be null or empty string!");
         }
