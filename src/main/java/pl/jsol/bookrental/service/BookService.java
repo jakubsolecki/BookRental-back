@@ -17,6 +17,7 @@ public class BookService {
     private final BookRepository bookRepository;
 
     public Book addBook(String title, String author, String genre){
+
         if(StringUtils.isAnyEmpty(title, author, genre)) {
             throw new IllegalArgumentException("Argument cannot be null or empty string!");
         }
@@ -31,6 +32,7 @@ public class BookService {
     }
 
     public Page<Book> getAllBooks(int page, int size, String sort, String sortBy) {
+
         Pageable pageable = PageRequest.of(page, size, sort.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return bookRepository.findAll(pageable);
     }

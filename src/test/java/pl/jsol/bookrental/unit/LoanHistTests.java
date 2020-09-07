@@ -26,7 +26,7 @@ public class LoanHistTests {
     }
 
     @Test
-    public void newLoanHist_MetDeadline_NoPenalty() {
+    public void newLoanHist_whenMetDeadline_thenNoPenalty() {
         when(loan.getDueDate()).thenReturn(LocalDate.now().plusDays(3));
         LoanHist loanHist = new LoanHist(loan);
 
@@ -34,7 +34,7 @@ public class LoanHistTests {
     }
 
     @Test
-    public void newLoanHist_ExceededDeadline_GivenPenalty() {
+    public void newLoanHist_whenExceededDeadline_thenGivePenalty() {
         when(loan.getDueDate()).thenReturn(LocalDate.now().minusDays(3));
         LoanHist loanHist = new LoanHist(loan);
 

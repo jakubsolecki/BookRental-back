@@ -31,16 +31,15 @@ public class BookTests {
     }
 
     @Test
-    public void addCopyTest() {
+    public void addCopy_whenAddCopy_thenReturnCorrectQuantity() {
 
-        // when then
         assertEquals(0, book.getCopiesQuantity());
         assertTrue(book.addCopy(copy1));
         assertEquals(1, book.getCopiesQuantity());
     }
 
     @Test
-    public void getNextAvailableCopyTest() {
+    public void getNextAvailableCopy_whenAvailableCopy_thenReturnIt() {
 
         when(copy1.isAvailable()).thenReturn(false);
         when(copy2.isAvailable()).thenReturn(true);
@@ -51,7 +50,7 @@ public class BookTests {
     }
 
     @Test
-    public void getNextAvailableCopy_NoneAvailable_ExceptionThrown() {
+    public void getNextAvailableCopy_whenNoCopyAvailable_thenExceptionThrown() {
 
         when(copy1.isAvailable()).thenReturn(false);
         when(copy2.isAvailable()).thenReturn(false);
@@ -64,7 +63,7 @@ public class BookTests {
     }
 
     @Test
-    public void getNextAvailableCopy_NoCopies_ExceptionThrown() {
+    public void getNextAvailableCopy_whenNoCopies_thenExceptionThrown() {
 
         Assertions.assertThrows(NoSuchElementException.class, () -> {
             book.getNextAvailableCopy();
