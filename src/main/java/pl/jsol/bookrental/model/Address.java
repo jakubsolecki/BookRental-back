@@ -8,6 +8,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
+@ToString
 public class Address {
     @NonNull
     private String city;

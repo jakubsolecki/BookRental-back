@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.LoanHistRepository;
 import pl.jsol.bookrental.model.Loan;
 import pl.jsol.bookrental.model.LoanHist;
@@ -12,6 +13,7 @@ import pl.jsol.bookrental.model.LoanHist;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class LoanHistService {
 

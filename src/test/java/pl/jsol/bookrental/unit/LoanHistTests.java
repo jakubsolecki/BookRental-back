@@ -1,10 +1,9 @@
 package pl.jsol.bookrental.unit;
 
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import pl.jsol.bookrental.model.Copy;
+import pl.jsol.bookrental.model.BookCopy;
 import pl.jsol.bookrental.model.Loan;
 import pl.jsol.bookrental.model.LoanHist;
 import pl.jsol.bookrental.model.Member;
@@ -22,7 +21,7 @@ public class LoanHistTests {
     protected void setUp() {
         loan = Mockito.mock(Loan.class);
         when(loan.getMember()).thenReturn(Mockito.mock(Member.class));
-        when(loan.getCopy()).thenReturn(Mockito.mock(Copy.class));
+        when(loan.getBookCopy()).thenReturn(Mockito.mock(BookCopy.class));
     }
 
     @Test

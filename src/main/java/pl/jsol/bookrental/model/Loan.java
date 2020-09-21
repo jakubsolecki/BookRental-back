@@ -22,7 +22,7 @@ public class Loan {
 
     @OneToOne
     @NonNull
-    protected Copy copy;
+    protected BookCopy bookCopy;
 
     @NonNull
     private LocalDate outDate;
@@ -31,23 +31,23 @@ public class Loan {
     protected LocalDate dueDate;
 
     public Loan(Member member, Book book) throws CannotProceedException {
-        Copy bookedCopy = null;
+        BookCopy bookedBookCopy = null;
 
         try {
-            bookedCopy = book.getNextAvailableCopy();
+            bookedBookCopy = book.getNextAvailableCopy();
         } catch (NoSuchElementException error) {
             throw new CannotProceedException(error.getMessage());
         }
 
-        bookedCopy.setAvailable(false);
+        bookedBookCopy.setAvailable(false);
         this.member = member;
-        copy = bookedCopy;
+        bookCopy = bookedBookCopy;
         outDate = LocalDate.now();
         dueDate = outDate.plusDays(7);
     }
 
     public void returnCopy() {
-        copy.setAvailable(true);
+        bookCopy.setAvailable(true);
     }
 
     public void extendExpiryDate() {

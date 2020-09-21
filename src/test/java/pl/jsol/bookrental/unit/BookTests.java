@@ -4,8 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.Copy;
+import pl.jsol.bookrental.model.BookCopy;
 import pl.jsol.bookrental.model.Genre;
 
 import java.util.NoSuchElementException;
@@ -17,16 +18,16 @@ import static org.mockito.Mockito.when;
 public class BookTests {
 
     private Book book;
-    private Copy copy1;
-    private Copy copy2;
+    private BookCopy bookCopy1;
+    private BookCopy bookCopy2;
 
     @BeforeEach
     protected void setUp() {
 
-        book = new Book("Title 1", "Author 1", Genre.parseGenre("fantasy"));
+        book = new Book("Title 1", Mockito.mock(Author.class), "fantasy");
 
-        copy1 = Mockito.mock(Copy.class);
-        copy2 = Mockito.mock(Copy.class);
+        bookCopy1 = Mockito.mock(BookCopy.class);
+        bookCopy2 = Mockito.mock(BookCopy.class);
 
     }
 
@@ -34,40 +35,36 @@ public class BookTests {
     public void addCopy_whenAddCopy_thenReturnCorrectQuantity() {
 
         assertEquals(0, book.getCopiesQuantity());
-        assertTrue(book.addCopy(copy1));
+        assertTrue(book.addCopy(bookCopy1));
         assertEquals(1, book.getCopiesQuantity());
     }
 
     @Test
     public void getNextAvailableCopy_whenAvailableCopy_thenReturnIt() {
 
-        when(copy1.isAvailable()).thenReturn(false);
-        when(copy2.isAvailable()).thenReturn(true);
-        book.addCopy(copy1);
-        book.addCopy(copy2);
+        when(bookCopy1.isAvailable()).thenReturn(false);
+        when(bookCopy2.isAvailable()).thenReturn(true);
+        book.addCopy(bookCopy1);
+        book.addCopy(bookCopy2);
 
-        assertEquals(copy2, book.getNextAvailableCopy());
+        assertEquals(bookCopy2, book.getNextAvailableCopy());
     }
 
     @Test
     public void getNextAvailableCopy_whenNoCopyAvailable_thenExceptionThrown() {
 
-        when(copy1.isAvailable()).thenReturn(false);
-        when(copy2.isAvailable()).thenReturn(false);
-        book.addCopy(copy1);
-        book.addCopy(copy2);
+        when(bookCopy1.isAvailable()).thenReturn(false);
+        when(bookCopy2.isAvailable()).thenReturn(false);
+        book.addCopy(bookCopy1);
+        book.addCopy(bookCopy2);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-            book.getNextAvailableCopy();
-        });
+        Assertions.assertThrows(NoSuchElementException.class, () -> book.getNextAvailableCopy());
     }
 
     @Test
     public void getNextAvailableCopy_whenNoCopies_thenExceptionThrown() {
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-            book.getNextAvailableCopy();
-        });
+        Assertions.assertThrows(NoSuchElementException.class, () -> book.getNextAvailableCopy());
     }
 
 }

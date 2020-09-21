@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.MemberRepository;
 import pl.jsol.bookrental.model.Address;
 import pl.jsol.bookrental.model.Member;
@@ -14,6 +15,7 @@ import pl.jsol.bookrental.model.Member;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
 

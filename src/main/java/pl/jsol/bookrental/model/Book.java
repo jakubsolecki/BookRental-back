@@ -7,9 +7,9 @@ import java.util.*;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,31 +19,39 @@ public class Book {
     private String title;
 
     @NonNull
-    private String author;
+    @ManyToOne
+    private Author author;
 
     @NonNull
     private Genre genre;
 
     @ToString.Exclude
-    @OneToMany(fetch = FetchType.LAZY)
-    private final Set<Copy> copies = new HashSet<>();
+    @OneToMany(mappedBy = "book")
+    private final Set<BookCopy> copies = new HashSet<>();
 
-    public boolean addCopy(Copy copy) {
-        return copies.add(copy);
+    public Book(String title, Author author, String genre) {
+        this.title = title;
+        this.author = author;
+        author.addBook(this);
+        this.genre = Genre.fromString(genre);
+    }
+
+    public boolean addCopy(BookCopy bookCopy) {
+        return copies.add(bookCopy);
     }
 
     public int getCopiesQuantity() {
         return copies.size();
     }
 
-    public Copy getNextAvailableCopy() throws NoSuchElementException {
+    public BookCopy getNextAvailableCopy() throws NoSuchElementException {
         if(copies.isEmpty()) {
             throw new NoSuchElementException("No copies available!");
         }
 
-        for (Copy copy : copies) {
-            if (copy.isAvailable()) {
-                return copy;
+        for (BookCopy bookCopy : copies) {
+            if (bookCopy.isAvailable()) {
+                return bookCopy;
             }
         }
         throw new NoSuchElementException("No copies available!");

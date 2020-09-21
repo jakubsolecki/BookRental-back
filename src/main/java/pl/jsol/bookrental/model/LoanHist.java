@@ -22,7 +22,7 @@ public class LoanHist extends Loan{
 
     public LoanHist(Loan loan) {
         member = loan.getMember();
-        copy = loan.getCopy();
+        bookCopy = loan.getBookCopy();
         dueDate = loan.getDueDate();
         inDate = LocalDate.now();
         Period diff = Period.between(dueDate, inDate);
