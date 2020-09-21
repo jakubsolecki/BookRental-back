@@ -10,7 +10,7 @@ import java.time.Period;
 @Entity
 @NoArgsConstructor
 @Getter
-public class LoanHist extends Loan{
+public class LoanHist extends Loan {
     @NonNull
     private LocalDate inDate;
 
@@ -21,7 +21,7 @@ public class LoanHist extends Loan{
     private String comments;
 
     public LoanHist(Loan loan) {
-        member = loan.getMember();
+        libraryMember = loan.getLibraryMember();
         bookCopy = loan.getBookCopy();
         dueDate = loan.getDueDate();
         inDate = LocalDate.now();

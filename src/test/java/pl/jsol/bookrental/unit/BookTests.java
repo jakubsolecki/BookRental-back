@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.BookCopy;
-import pl.jsol.bookrental.model.Genre;
 
 import java.util.NoSuchElementException;
 

@@ -1,7 +1,5 @@
 package pl.jsol.bookrental.service;
 
-import com.sun.istack.NotNull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
@@ -14,30 +12,63 @@ import pl.jsol.bookrental.model.Book;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
 
+    @Transactional(rollbackFor = Exception.class)
     public Book addBook(String title, Author author, String genre){
 
         if(StringUtils.isAnyEmpty(title, genre) || author == null) {
-            throw new IllegalArgumentException("Argument cannot be null or empty string!");
+            throw new IllegalArgumentException("Argument cannot be null or empty!");
         }
 
-        Book bookToAdd = new Book(title, author, genre);
+        Book bookToAdd = Book.builder()
+                .title(title)
+                .author(author)
+                .genre(genre)
+                .build();
 
         return bookRepository.save(bookToAdd);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Book> getBookById(Long id) {
         return bookRepository.findById(id);
     }
 
-    public Page<Book> getAllBooks(int page, int size, String sort, String sortBy) {
+    @Transactional(readOnly = true)
+    public Page<Book> getAllBooks(int page, int size, String sortStrategy, String sortBy) {
 
-        Pageable pageable = PageRequest.of(page, size, sort.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        Sort.Direction sortDirection = sortStrategy.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
         return bookRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Book> getBooksByExample(int page,
+                                        int size,
+                                        String title,
+                                        Author author,
+                                        String genre,
+                                        String sortStrategy,
+                                        String sortBy) {
+
+        Book book = Book.builder()
+                .title(title)
+                .author(author)
+                .genre(genre)
+                .build();
+
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withIgnoreCase()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Book> exampleOfBook = Example.of(book, matcher);
+        Sort.Direction sortDirection = sortStrategy.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
+
+        return bookRepository.findAll(exampleOfBook, pageable);
     }
 }

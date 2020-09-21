@@ -6,7 +6,6 @@ import pl.jsol.bookrental.dal.repository.AuthorRepository;
 import pl.jsol.bookrental.dal.repository.BookRepository;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.Genre;
 
 import javax.annotation.PostConstruct;
 

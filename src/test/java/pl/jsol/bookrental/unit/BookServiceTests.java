@@ -43,6 +43,6 @@ public class BookServiceTests {
 
         when(bookRepository.save(any(Book.class))).thenReturn(mockBook);
 
-        assertEquals(mockBook, bookService.addBook("Title", Mockito.mock(Author.class), "Genre"));
+        assertEquals(mockBook, bookService.addBook("Title", Mockito.mock(Author.class), "BookGenre"));
     }
 }

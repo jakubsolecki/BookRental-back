@@ -6,7 +6,7 @@ import org.mockito.Mockito;
 import pl.jsol.bookrental.model.BookCopy;
 import pl.jsol.bookrental.model.Loan;
 import pl.jsol.bookrental.model.LoanHist;
-import pl.jsol.bookrental.model.Member;
+import pl.jsol.bookrental.model.LibraryMember;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ public class LoanHistTests {
     @BeforeEach
     protected void setUp() {
         loan = Mockito.mock(Loan.class);
-        when(loan.getMember()).thenReturn(Mockito.mock(Member.class));
+        when(loan.getLibraryMember()).thenReturn(Mockito.mock(LibraryMember.class));
         when(loan.getBookCopy()).thenReturn(Mockito.mock(BookCopy.class));
     }
 

@@ -6,30 +6,40 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class LibraryMember {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NonNull
     private String firstName;
 
-    @NonNull
     private String lastName;
 
-    @NonNull
     private String phone;
 
-    @NonNull
     private String email;
 
     @Embedded
-    @NonNull
     private Address address;
 
     private String comments;
+
+    @Builder
+    public LibraryMember(String firstName,
+                         String lastName,
+                         String phone,
+                         String email,
+                         String city,
+                         String street,
+                         String zip) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.address = Address.builder().city(city).street(street).zip(zip).build();
+    }
 
     public void addComment(String comment) {
         if (comments == null) {

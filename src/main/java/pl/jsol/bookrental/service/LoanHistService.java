@@ -17,16 +17,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoanHistService {
 
-    private LoanHistRepository loanHistRepository;
+    private final LoanHistRepository loanHistRepository;
 
+    @Transactional(rollbackFor = Exception.class)
     public LoanHist addLoanHist(Loan loan) {
         return loanHistRepository.save(new LoanHist(loan));
     }
 
+    @Transactional(readOnly = true)
     public Optional<LoanHist> getLoanHistById(Long id) {
         return loanHistRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
     public Page<LoanHist> getAllLoanHists(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return loanHistRepository.findAll(pageable);

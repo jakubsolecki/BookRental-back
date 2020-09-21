@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.service.BookService;
 
 @SpringBootTest
@@ -15,7 +17,8 @@ class BookrentalApplicationTests {
 
     @Test
     void contextLoads() {
-
+        Page<Book> pageOfBooks = bookService.getBooksByExample(0, 4, "5",null, null,"asc", "id");
+        pageOfBooks.getContent().forEach(System.out::println);
     }
 
 

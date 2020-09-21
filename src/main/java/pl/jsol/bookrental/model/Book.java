@@ -15,25 +15,25 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NonNull
     private String title;
 
-    @NonNull
     @ManyToOne
     private Author author;
 
-    @NonNull
-    private Genre genre;
+    private BookGenre bookGenre;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "book")
     private final Set<BookCopy> copies = new HashSet<>();
 
+    @Builder
     public Book(String title, Author author, String genre) {
         this.title = title;
         this.author = author;
-        author.addBook(this);
-        this.genre = Genre.fromString(genre);
+        if (author != null) {
+            author.addBook(this);
+        }
+        this.bookGenre = genre == null ? null : BookGenre.fromString(genre);
     }
 
     public boolean addCopy(BookCopy bookCopy) {
@@ -45,7 +45,7 @@ public class Book {
     }
 
     public BookCopy getNextAvailableCopy() throws NoSuchElementException {
-        if(copies.isEmpty()) {
+        if (copies.isEmpty()) {
             throw new NoSuchElementException("No copies available!");
         }
 

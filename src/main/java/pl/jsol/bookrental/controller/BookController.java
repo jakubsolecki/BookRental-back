@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.service.BookService;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor

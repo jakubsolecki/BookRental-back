@@ -18,10 +18,12 @@ public class Loan {
 
     @ManyToOne
     @NonNull
-    protected Member member;
+    @JoinColumn
+    protected LibraryMember libraryMember;
 
     @OneToOne
     @NonNull
+    @JoinColumn
     protected BookCopy bookCopy;
 
     @NonNull
@@ -30,7 +32,7 @@ public class Loan {
     @NonNull
     protected LocalDate dueDate;
 
-    public Loan(Member member, Book book) throws CannotProceedException {
+    public Loan(LibraryMember libraryMember, Book book) throws CannotProceedException {
         BookCopy bookedBookCopy = null;
 
         try {
@@ -40,7 +42,7 @@ public class Loan {
         }
 
         bookedBookCopy.setAvailable(false);
-        this.member = member;
+        this.libraryMember = libraryMember;
         bookCopy = bookedBookCopy;
         outDate = LocalDate.now();
         dueDate = outDate.plusDays(7);
