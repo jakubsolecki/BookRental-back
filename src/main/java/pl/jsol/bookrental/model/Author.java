@@ -24,10 +24,10 @@ public class Author {
     @NonNull
     private String lastName;
 
-    @OneToMany(mappedBy = "author")
-    private final Set<Book> books = new HashSet<>();
-
-    public boolean addBook(Book newBook) {
-        return books.add(newBook);
-    }
+//    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+//    private final Set<Book> books = new HashSet<>();
+//
+//    public boolean addBook(Book newBook) {
+//        return books.add(newBook);
+//    }
 }

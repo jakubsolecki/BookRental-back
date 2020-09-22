@@ -1,5 +1,6 @@
 package pl.jsol.bookrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,9 +31,9 @@ public class Book {
     public Book(String title, Author author, String genre) {
         this.title = title;
         this.author = author;
-        if (author != null) {
-            author.addBook(this);
-        }
+//        if (author != null) {
+//            author.addBook(this);
+//        }
         this.bookGenre = genre == null ? null : BookGenre.fromString(genre);
     }
 
@@ -44,6 +45,7 @@ public class Book {
         return copies.size();
     }
 
+    @JsonIgnore
     public BookCopy getNextAvailableCopy() throws NoSuchElementException {
         if (copies.isEmpty()) {
             throw new NoSuchElementException("No copies available!");
@@ -54,6 +56,7 @@ public class Book {
                 return bookCopy;
             }
         }
+
         throw new NoSuchElementException("No copies available!");
     }
 }

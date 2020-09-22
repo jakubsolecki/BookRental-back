@@ -41,7 +41,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<Book> getAllBooks(int page, int size, String sortStrategy, String sortBy) {
 
-        Sort.Direction sortDirection = sortStrategy.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction sortDirection = (sortStrategy != null && sortStrategy.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
         return bookRepository.findAll(pageable);
     }
@@ -61,11 +61,11 @@ public class BookService {
                 .genre(genre)
                 .build();
 
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+        ExampleMatcher bookMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreCase()
                 .withIgnoreNullValues()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-        Example<Book> exampleOfBook = Example.of(book, matcher);
+        Example<Book> exampleOfBook = Example.of(book, bookMatcher);
         Sort.Direction sortDirection = sortStrategy.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
