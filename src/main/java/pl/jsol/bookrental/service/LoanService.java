@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.LoanRepository;
+import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.Loan;
 import pl.jsol.bookrental.model.LibraryMember;
@@ -27,7 +28,7 @@ public class LoanService {
 
         try {
             loan = new Loan(libraryMember, book);
-        } catch (CannotProceedException error) {
+        } catch (NoCopiesAvailableException error) {
             throw new CannotCreateException(error.getMessage());
         }
 

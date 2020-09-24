@@ -17,16 +17,25 @@ public class BookController {
 
     @GetMapping
     public Page<Book> getAllBooks (
-            @RequestParam(name = "page") int page,
-            @RequestParam(name = "size") int size,
-            @RequestParam(name = "sortStrategy", defaultValue = "asc") String sortStrategy,
-            @RequestParam(name = "sortBy", defaultValue = "title") String sortBy) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort,
+            @RequestParam(defaultValue = "title") String sortBy) {
 
-        return bookService.getAllBooks(page, size, sortStrategy, sortBy);
+        return bookService.getAllBooks(page, size, sort, sortBy);
     }
 
     @GetMapping(value = "/{id}")
     public Optional<Book> getBookById(@PathVariable Long id) {
         return bookService.getBookById(id);
+    }
+
+    @PostMapping(value = "/")
+    public Book addBook(
+            @RequestParam String title,
+            @RequestParam Long authorId,
+            @RequestParam String genre) {
+
+        return bookService.addBook(title, authorId, genre);
     }
 }

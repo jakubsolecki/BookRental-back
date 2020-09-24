@@ -28,9 +28,9 @@ public class BookServiceTests {
     @Test
     public void addBook_whenNullOrEmptyParameter_thenThrowException() {
 
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("", Mockito.mock(Author.class), "genre"));
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("", Mockito.mock(Long.class), "genre"));
         assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", null, "genre"));
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", Mockito.mock(Author.class), null));
+        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", Mockito.mock(Long.class), null));
         assertThrows(IllegalArgumentException.class, () -> bookService.addBook("", null, "genre"));
         assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", null, null));
         assertThrows(IllegalArgumentException.class, () -> bookService.addBook(null, null, null));
@@ -43,6 +43,6 @@ public class BookServiceTests {
 
         when(bookRepository.save(any(Book.class))).thenReturn(mockBook);
 
-        assertEquals(mockBook, bookService.addBook("Title", Mockito.mock(Author.class), "BookGenre"));
+        assertEquals(mockBook, bookService.addBook("Title", Mockito.mock(Long.class), "BookGenre"));
     }
 }

@@ -2,6 +2,7 @@ package pl.jsol.bookrental.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 
 import javax.persistence.*;
 import java.util.*;
@@ -31,9 +32,6 @@ public class Book {
     public Book(String title, Author author, String genre) {
         this.title = title;
         this.author = author;
-//        if (author != null) {
-//            author.addBook(this);
-//        }
         this.bookGenre = genre == null ? null : BookGenre.fromString(genre);
     }
 
@@ -46,9 +44,9 @@ public class Book {
     }
 
     @JsonIgnore
-    public BookCopy getNextAvailableCopy() throws NoSuchElementException {
+    public BookCopy getNextAvailableCopy() throws NoCopiesAvailableException {
         if (copies.isEmpty()) {
-            throw new NoSuchElementException("No copies available!");
+            throw new NoCopiesAvailableException("Book with id: " + this.id + " does not have any copies yet!");
         }
 
         for (BookCopy bookCopy : copies) {
@@ -57,6 +55,6 @@ public class Book {
             }
         }
 
-        throw new NoSuchElementException("No copies available!");
+        throw new NoCopiesAvailableException("No copies available for loan!");
     }
 }

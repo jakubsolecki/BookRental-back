@@ -1,6 +1,7 @@
 package pl.jsol.bookrental.model;
 
 import lombok.*;
+import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 
 import javax.naming.CannotProceedException;
 import javax.persistence.*;
@@ -32,13 +33,13 @@ public class Loan {
     @NonNull
     protected LocalDate dueDate;
 
-    public Loan(LibraryMember libraryMember, Book book) throws CannotProceedException {
+    public Loan(LibraryMember libraryMember, Book book) throws NoCopiesAvailableException {
         BookCopy bookedBookCopy = null;
 
         try {
             bookedBookCopy = book.getNextAvailableCopy();
-        } catch (NoSuchElementException error) {
-            throw new CannotProceedException(error.getMessage());
+        } catch (NoCopiesAvailableException error) {
+            throw new NoCopiesAvailableException(error.getMessage());
         }
 
         bookedBookCopy.setAvailable(false);
