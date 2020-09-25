@@ -2,7 +2,6 @@ package pl.jsol.bookrental.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.hateoas.RepresentationModel;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.util.*;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class Book extends RepresentationModel<Book> {
+public class Book extends Model<Book> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -6,6 +6,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.BookRepository;
+import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.exceptions.notFound.AuthorNotFoundException;
 import pl.jsol.bookrental.exceptions.notFound.BookNotFoundException;
 import pl.jsol.bookrental.model.Author;
@@ -44,8 +45,7 @@ public class BookService {
             return bookRepository.save(bookToAdd);
         }
         else {
-            //TODO: return url to this book
-            throw new EntityExistsException("This book already exists!");
+            throw new ResourceAlreadyExistsException(foundBook.get());
         }
     }
 
