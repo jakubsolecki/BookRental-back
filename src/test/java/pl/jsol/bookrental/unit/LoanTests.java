@@ -21,7 +21,7 @@ public class LoanTests {
 
         when(book.getNextAvailableCopy()).thenThrow(new NoSuchElementException("No copies available!"));
 
-        assertThrows(CannotProceedException.class, () -> new Loan(libraryMember, book));
+        assertThrows(NoSuchElementException.class, () -> new Loan(libraryMember, book));
     }
 
 }

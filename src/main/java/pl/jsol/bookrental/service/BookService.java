@@ -12,6 +12,7 @@ import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 
 import javax.persistence.EntityExistsException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,12 +38,13 @@ public class BookService {
                 .genre(genre)
                 .build();
 
-        Example<Book> bookExample = Example.of(bookToAdd);
+        Optional<Book> foundBook = verifyBookExistence(bookToAdd);
 
-        if (bookRepository.findAll(bookExample).isEmpty()) {
+        if (foundBook.isEmpty()) {
             return bookRepository.save(bookToAdd);
         }
         else {
+            //TODO: return url to this book
             throw new EntityExistsException("This book already exists!");
         }
     }
@@ -53,9 +55,9 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Book> getAllBooks(int page, int size, String sortStrategy, String sortBy) {
+    public Page<Book> getAllBooks(int page, int size, String sort, String sortBy) {
 
-        Sort.Direction sortDirection = (sortStrategy != null && sortStrategy.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
         return bookRepository.findAll(pageable);
@@ -85,5 +87,14 @@ public class BookService {
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
         return bookRepository.findAll(exampleOfBook, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    protected Optional<Book> verifyBookExistence(Book book) {
+
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
+        Example<Book> bookExample = Example.of(book, exampleMatcher);
+
+        return bookRepository.findOne(bookExample);
     }
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.BookCopy;
@@ -57,13 +58,13 @@ public class BookTests {
         book.addCopy(bookCopy1);
         book.addCopy(bookCopy2);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> book.getNextAvailableCopy());
+        Assertions.assertThrows(NoCopiesAvailableException.class, () -> book.getNextAvailableCopy());
     }
 
     @Test
     public void getNextAvailableCopy_whenNoCopies_thenExceptionThrown() {
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> book.getNextAvailableCopy());
+        Assertions.assertThrows(NoCopiesAvailableException.class, () -> book.getNextAvailableCopy());
     }
 
 }
