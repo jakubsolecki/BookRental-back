@@ -6,12 +6,12 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.BookRepository;
-import pl.jsol.bookrental.exceptions.AuthorNotFoundException;
+import pl.jsol.bookrental.exceptions.notFound.AuthorNotFoundException;
+import pl.jsol.bookrental.exceptions.notFound.BookNotFoundException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 
 import javax.persistence.EntityExistsException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class BookService {
         }
 
         Author author = authorService.findAuthorById(authorId).orElseThrow(() ->
-                new AuthorNotFoundException("Author with id: " + authorId + " does not exist"));
+                new AuthorNotFoundException(authorId));
 
         Book bookToAdd = Book.builder()
                 .title(title)
@@ -48,8 +48,8 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Book> getBookById(Long id) {
-        return bookRepository.findById(id);
+    public Book getBookById(Long id) throws BookNotFoundException {
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
     @Transactional(readOnly = true)

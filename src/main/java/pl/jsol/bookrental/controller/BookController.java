@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.service.BookService;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
-public class BookController {
+public class BookController{
 
     private final BookService bookService;
 
@@ -26,7 +24,8 @@ public class BookController {
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<Book> getBookById(@PathVariable Long id) {
+    public Book getBookById(@PathVariable Long id) {
+
         return bookService.getBookById(id);
     }
 
