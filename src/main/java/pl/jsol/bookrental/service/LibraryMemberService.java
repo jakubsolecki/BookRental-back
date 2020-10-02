@@ -6,9 +6,10 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.LibraryMemberRepository;
+import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.model.LibraryMember;
 
-import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -16,8 +17,11 @@ import java.util.Optional;
 public class LibraryMemberService {
 
     private final LibraryMemberRepository libraryMemberRepository;
+    private static final Pattern VALID_EMAIL_REGEX =
+            Pattern.compile("^\\w+\\.?\\w+@\\w+\\.[a-z]+\\.?[a-z]+$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VALID_ZIP_REGEX = Pattern.compile("^\\d{2}-\\d{3}$");
+    private static final Pattern VALID_PHONE_REGEX = Pattern.compile("^\\d{9}$");
 
-    //TODO: regex validation
     @Transactional(rollbackFor = Exception.class)
     public LibraryMember addMember(String firstName,
                                    String lastName,
@@ -28,7 +32,27 @@ public class LibraryMemberService {
                                    String zip) throws IllegalArgumentException {
 
         if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) {
-           throw new IllegalArgumentException("String cannot be null or empty!");
+           throw new IllegalArgumentException("String cannot be null or empty");
+        }
+
+        if(!VALID_EMAIL_REGEX.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+
+        if(!VALID_PHONE_REGEX.matcher(phone).matches()) {
+            throw new IllegalArgumentException("Invalid phone number");
+        }
+
+        if(!VALID_ZIP_REGEX.matcher(zip).matches()) {
+            throw new IllegalArgumentException("Invalid zip code");
+        }
+
+        if(!libraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
+            throw new IllegalArgumentException("Email " + email + " is already taken");
+        }
+
+        if(!libraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
+            throw new IllegalArgumentException("Phone " + phone + " is already assigned to the existing library member");
         }
 
         LibraryMember libraryMember = LibraryMember.builder()
@@ -45,13 +69,17 @@ public class LibraryMemberService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<LibraryMember> getMemberById(Long id) {
-        return libraryMemberRepository.findById(id);
+    public LibraryMember getMemberById(Long id) {
+
+        return libraryMemberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LibraryMember", id));
     }
 
     @Transactional(readOnly = true)
-    public Page<LibraryMember> getAllMembers(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "lastName");
+    public Page<LibraryMember> getAllMembers(int page, int size, String sort, String sortBy) {
+
+        Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
+
         return libraryMemberRepository.findAll(pageable);
     }
 

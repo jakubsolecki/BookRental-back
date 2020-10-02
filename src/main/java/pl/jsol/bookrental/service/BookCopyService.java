@@ -14,14 +14,17 @@ import java.util.Optional;
 public class BookCopyService {
 
     private final BookCopyRepository bookCopyRepository;
+    private final BookService bookService;
 
     @Transactional(rollbackFor = Exception.class)
-    public BookCopy addCopy(Book book) {
+    public BookCopy addBookCopy(Long bookId) {
+
+        Book book = bookService.getBookById(bookId);
         return bookCopyRepository.save(new BookCopy(book));
     }
 
     @Transactional(readOnly = true)
-    public Optional<BookCopy> getCopyById(Long id) {
+    public Optional<BookCopy> getBookCopyById(Long id) {
         return bookCopyRepository.findById(id);
     }
 }

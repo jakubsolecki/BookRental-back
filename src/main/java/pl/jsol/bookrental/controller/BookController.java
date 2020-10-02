@@ -6,12 +6,16 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.Model;
+import pl.jsol.bookrental.model.BookCopy;
+import pl.jsol.bookrental.model.DataSchema;
+import pl.jsol.bookrental.service.BookCopyService;
 import pl.jsol.bookrental.service.BookService;
 
 import java.net.URI;
+import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -21,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class BookController {
 
     private final BookService bookService;
+    private final BookCopyService bookCopyService;
 
     @GetMapping
     public Page<Book> getAllBooks (
@@ -32,7 +37,7 @@ public class BookController {
         return bookService.getAllBooks(page, size, sort, sortBy);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public Book getBookById(@PathVariable Long id) {
 
         Book book = bookService.getBookById(id);
@@ -41,9 +46,19 @@ public class BookController {
         return book.add(selfLink);
     }
 
-    @PostMapping(value = "/")
+    @GetMapping("/copies")
+    public Set<BookCopy> getCopiesOfBook(Long bookId) {
+
+        try {
+            return bookService.getBookById(bookId).getCopies();
+        } catch (NoCopiesAvailableException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        }
+    }
+
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Book addBook(
+    public Book postBook(
             @RequestParam String title,
             @RequestParam Long authorId,
             @RequestParam String genre) {
@@ -53,10 +68,12 @@ public class BookController {
             Link selfLink = linkTo(BookController.class).slash(book.getId()).withSelfRel();
             return book.add(selfLink);
         } catch (ResourceAlreadyExistsException ex) {
-            Model<?> existingBook = ex.getEntityObject();
+            DataSchema<?> existingBook = ex.getExistingEntity();
             URI selfLink = linkTo(BookController.class).slash(existingBook.getId()).toUri();
 
             throw new ResponseStatusException(HttpStatus.SEE_OTHER, selfLink.toString(), ex);
         }
     }
+
+
 }

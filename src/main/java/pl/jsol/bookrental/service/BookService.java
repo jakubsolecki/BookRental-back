@@ -6,13 +6,11 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.BookRepository;
+import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
-import pl.jsol.bookrental.exceptions.notFound.AuthorNotFoundException;
-import pl.jsol.bookrental.exceptions.notFound.BookNotFoundException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 
-import javax.persistence.EntityExistsException;
 import java.util.Optional;
 
 @Service
@@ -24,14 +22,13 @@ public class BookService {
 
     @Transactional(rollbackFor = Exception.class)
     public Book addBook(String title, Long authorId, String genre)
-            throws IllegalArgumentException, EntityExistsException, AuthorNotFoundException {
+            throws IllegalArgumentException, ResourceAlreadyExistsException, EntityNotFoundException {
 
         if(StringUtils.isAnyEmpty(title, genre) || authorId == null) {
-            throw new IllegalArgumentException("Argument cannot be null or empty!");
+            throw new IllegalArgumentException("Argument cannot be null or empty.");
         }
 
-        Author author = authorService.findAuthorById(authorId).orElseThrow(() ->
-                new AuthorNotFoundException(authorId));
+        Author author = authorService.findAuthorById(authorId);
 
         Book bookToAdd = Book.builder()
                 .title(title)
@@ -50,8 +47,8 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Book getBookById(Long id) throws BookNotFoundException {
-        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+    public Book getBookById(Long bookId) throws EntityNotFoundException {
+        return bookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("Book", bookId));
     }
 
     @Transactional(readOnly = true)

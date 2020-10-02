@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import pl.jsol.bookrental.dal.repository.BookRepository;
+import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.service.AuthorService;
@@ -48,7 +49,7 @@ public class BookServiceTests {
         Author mockAuthor = Mockito.mock(Author.class);
 
         when(bookRepository.save(any(Book.class))).thenReturn(mockBook);
-        when(authorService.findAuthorById(1L)).thenReturn(Optional.ofNullable(mockAuthor));
+        when(authorService.findAuthorById(1L)).thenReturn(mockAuthor);
 
         assertEquals(mockBook, bookService.addBook("Title", 1L, "BookGenre"));
     }

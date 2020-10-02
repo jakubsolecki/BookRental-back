@@ -6,14 +6,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
-public class Author {
+public class Author extends DataSchema<Author> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

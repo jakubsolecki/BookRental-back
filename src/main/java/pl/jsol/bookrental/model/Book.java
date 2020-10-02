@@ -12,7 +12,7 @@ import java.util.*;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class Book extends Model<Book> {
+public class Book extends DataSchema<Book> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

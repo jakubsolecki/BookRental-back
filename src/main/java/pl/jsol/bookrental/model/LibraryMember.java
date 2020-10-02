@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class LibraryMember {
+public class LibraryMember extends DataSchema<LibraryMember> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
