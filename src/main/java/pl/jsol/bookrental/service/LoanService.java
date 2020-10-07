@@ -10,10 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.LoanRepository;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.Loan;
 import pl.jsol.bookrental.model.LibraryMember;
+import pl.jsol.bookrental.model.Loan;
 
-import javax.naming.CannotProceedException;
 import java.util.Optional;
 
 @Service
@@ -21,10 +20,14 @@ import java.util.Optional;
 public class LoanService {
 
     private final LoanRepository loanRepository;
+    private final LibraryMemberService libraryMemberService;
+    private final BookService bookService;
 
     @Transactional(rollbackFor = Exception.class)
-    public Loan addLoan(LibraryMember libraryMember, Book book) throws CannotCreateException {
+    public Loan addLoan(Long libraryMemberId, Long bookId) throws CannotCreateException {
         Loan loan = null;
+        LibraryMember libraryMember = libraryMemberService.getMemberById(libraryMemberId);
+        Book book = bookService.getBookById(bookId);
 
         try {
             loan = new Loan(libraryMember, book);

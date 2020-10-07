@@ -1,5 +1,6 @@
 package pl.jsol.bookrental.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
@@ -16,12 +17,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BookService {
-
-    private final BookRepository bookRepository;
+    protected final BookRepository bookRepository;
     private final AuthorService authorService;
 
     @Transactional(rollbackFor = Exception.class)
-    public Book addBook(String title, Long authorId, String genre)
+    public Book addBook(@NonNull String title, @NonNull Long authorId, @NonNull String genre)
             throws IllegalArgumentException, ResourceAlreadyExistsException, EntityNotFoundException {
 
         if(StringUtils.isAnyEmpty(title, genre) || authorId == null) {

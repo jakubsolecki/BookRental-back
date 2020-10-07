@@ -1,6 +1,7 @@
 package pl.jsol.bookrental.service;
 
 import com.sun.istack.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
@@ -21,10 +22,10 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public Author addAuthor(@NotNull String firstName, @NotNull String lastName) {
+    public Author addAuthor(@NonNull String firstName, @NonNull String lastName) {
 
         if(StringUtils.isAnyEmpty(firstName, lastName)) {
-            throw new IllegalArgumentException("Argument cannot be null or empty.");
+            throw new IllegalArgumentException("Argument cannot be empty.");
         }
 
         Author newAuthor = new Author(firstName, lastName);
@@ -48,12 +49,12 @@ public class AuthorService {
     }
 
     @Transactional
-    public Author findAuthorById(@NotNull  Long id) {
+    public Author findAuthorById(@NonNull Long id) {
         return authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
     }
 
     @Transactional(readOnly = true)
-    protected Optional<Author> verifyAuthorExistence(Author author) {
+    protected Optional<Author> verifyAuthorExistence(@NonNull Author author) {
 
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Author> authorExample = Example.of(author, exampleMatcher);

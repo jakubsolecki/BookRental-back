@@ -7,11 +7,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import pl.jsol.bookrental.dal.repository.BookRepository;
-import pl.jsol.bookrental.exceptions.EntityNotFoundException;
+import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.service.AuthorService;
-import pl.jsol.bookrental.service.BookService;
 
 import java.util.Optional;
 
@@ -29,17 +28,19 @@ public class BookServiceTests {
     private AuthorService authorService;
 
     @InjectMocks
-    private BookService bookService;
+    private BookServiceProtectedMethod extendedBookService;
 
     @Test
     public void addBook_whenNullOrEmptyParameter_thenThrowException() {
 
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("", 1L, "genre"));
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", null, "genre"));
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", 1L, null));
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("", null, "genre"));
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook("title", null, null));
-        assertThrows(IllegalArgumentException.class, () -> bookService.addBook(null, null, null));
+        assertThrows(IllegalArgumentException.class, () -> extendedBookService.addBook("", 1L, "genre"));
+        assertThrows(IllegalArgumentException.class, () -> extendedBookService.addBook("title", 1L, ""));
+
+        assertThrows(NullPointerException.class, () -> extendedBookService.addBook("title", null, "genre"));
+        assertThrows(NullPointerException.class, () -> extendedBookService.addBook("title", 1L, null));
+        assertThrows(NullPointerException.class, () -> extendedBookService.addBook("", null, ""));
+        assertThrows(NullPointerException.class, () -> extendedBookService.addBook("title", null, null));
+        assertThrows(NullPointerException.class, () -> extendedBookService.addBook(null, null, null));
     }
 
     @Test
@@ -51,6 +52,21 @@ public class BookServiceTests {
         when(bookRepository.save(any(Book.class))).thenReturn(mockBook);
         when(authorService.findAuthorById(1L)).thenReturn(mockAuthor);
 
-        assertEquals(mockBook, bookService.addBook("Title", 1L, "BookGenre"));
+        assertEquals(mockBook, extendedBookService.addBook("Title", 1L, "BookGenre"));
     }
+
+    @Test
+    public void addBook_whenBookExists_thenThrowException() {
+
+        Book mockBook = Mockito.mock(Book.class);
+        Author mockAuthor = Mockito.mock(Author.class);
+        BookServiceProtectedMethod spiedExtendedBookService = Mockito.spy(extendedBookService);
+
+        when(authorService.findAuthorById(any(Long.class))).thenReturn(mockAuthor);
+        Mockito.doReturn(Optional.of(mockBook)).when(spiedExtendedBookService).verifyBookExistence(any(Book.class));
+
+        assertThrows(ResourceAlreadyExistsException.class, () -> spiedExtendedBookService.addBook("Title", 1L, "genre"));
+    }
+
+
 }
