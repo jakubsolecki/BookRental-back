@@ -1,13 +1,12 @@
 package pl.jsol.bookrental.service;
 
-import com.sun.istack.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.jsol.bookrental.dal.repository.AuthorRepository;
+import pl.jsol.bookrental.dal.repository.IAuthorRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Author;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorService {
 
-    private final AuthorRepository authorRepository;
+    private final IAuthorRepository IAuthorRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public Author addAuthor(@NonNull String firstName, @NonNull String lastName) {
@@ -32,7 +31,7 @@ public class AuthorService {
         Optional<Author> foundAuthor = verifyAuthorExistence(newAuthor);
 
         if(foundAuthor.isEmpty()) {
-            return authorRepository.save(newAuthor);
+            return IAuthorRepository.save(newAuthor);
         }
         else {
             throw new ResourceAlreadyExistsException((foundAuthor.get()));
@@ -45,12 +44,12 @@ public class AuthorService {
         Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return authorRepository.findAll(pageable);
+        return IAuthorRepository.findAll(pageable);
     }
 
     @Transactional
     public Author findAuthorById(@NonNull Long id) {
-        return authorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
+        return IAuthorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
     }
 
     @Transactional(readOnly = true)
@@ -59,6 +58,6 @@ public class AuthorService {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Author> authorExample = Example.of(author, exampleMatcher);
 
-        return authorRepository.findOne(authorExample);
+        return IAuthorRepository.findOne(authorExample);
     }
 }

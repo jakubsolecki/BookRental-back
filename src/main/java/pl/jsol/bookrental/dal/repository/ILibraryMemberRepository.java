@@ -8,7 +8,7 @@ import pl.jsol.bookrental.model.LibraryMember;
 import java.util.List;
 
 @Repository
-public interface LibraryMemberRepository extends JpaRepository<LibraryMember, Long> {
+public interface ILibraryMemberRepository extends JpaRepository<LibraryMember, Long> {
     @Query("select lm from LibraryMember lm where lm.email like ?1")
     List<LibraryMember> findLibraryMembersWithEmail(String email);
 

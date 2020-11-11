@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.jsol.bookrental.dal.repository.LoanRepository;
+import pl.jsol.bookrental.dal.repository.ILoanRepository;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.LibraryMember;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoanService {
 
-    private final LoanRepository loanRepository;
+    private final ILoanRepository loanRepository;
     private final LibraryMemberService libraryMemberService;
     private final BookService bookService;
 

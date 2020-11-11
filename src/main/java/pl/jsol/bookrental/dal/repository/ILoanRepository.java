@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import pl.jsol.bookrental.model.Loan;
 
 @Repository
-public interface LoanRepository extends JpaRepository<Loan, Long> {
+public interface ILoanRepository extends JpaRepository<Loan, Long> {
 }

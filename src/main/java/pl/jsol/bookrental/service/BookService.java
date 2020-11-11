@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.jsol.bookrental.dal.repository.BookRepository;
+import pl.jsol.bookrental.dal.repository.IBookRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Author;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BookService {
-    protected final BookRepository bookRepository;
+    protected final IBookRepository IBookRepository;
     private final AuthorService authorService;
 
     @Transactional(rollbackFor = Exception.class)
@@ -39,7 +39,7 @@ public class BookService {
         Optional<Book> foundBook = verifyBookExistence(bookToAdd);
 
         if (foundBook.isEmpty()) {
-            return bookRepository.save(bookToAdd);
+            return IBookRepository.save(bookToAdd);
         }
         else {
             throw new ResourceAlreadyExistsException(foundBook.get());
@@ -48,7 +48,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public Book getBookById(Long bookId) throws EntityNotFoundException {
-        return bookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("Book", bookId));
+        return IBookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("Book", bookId));
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +57,7 @@ public class BookService {
         Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return bookRepository.findAll(pageable);
+        return IBookRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class BookService {
         Sort.Direction sortDirection = sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return bookRepository.findAll(exampleOfBook, pageable);
+        return IBookRepository.findAll(exampleOfBook, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -92,6 +92,6 @@ public class BookService {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Book> bookExample = Example.of(book, exampleMatcher);
 
-        return bookRepository.findOne(bookExample);
+        return IBookRepository.findOne(bookExample);
     }
 }

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.jsol.bookrental.dal.repository.LibraryMemberRepository;
+import pl.jsol.bookrental.dal.repository.ILibraryMemberRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.model.LibraryMember;
 
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class LibraryMemberService {
 
-    private final LibraryMemberRepository libraryMemberRepository;
+    private final ILibraryMemberRepository ILibraryMemberRepository;
     private static final Pattern VALID_EMAIL_REGEX =
             Pattern.compile("^\\w+\\.?\\w+@\\w+\\.[a-z]+\\.?[a-z]+$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_ZIP_REGEX = Pattern.compile("^\\d{2}-\\d{3}$");
@@ -47,11 +47,11 @@ public class LibraryMemberService {
             throw new IllegalArgumentException("Invalid zip code");
         }
 
-        if(!libraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
+        if(!ILibraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
             throw new IllegalArgumentException("Email " + email + " is already taken");
         }
 
-        if(!libraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
+        if(!ILibraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
             throw new IllegalArgumentException("Phone " + phone + " is already assigned to the existing library member");
         }
 
@@ -65,13 +65,13 @@ public class LibraryMemberService {
                 .zip(zip)
                 .build();
 
-        return libraryMemberRepository.save(libraryMember);
+        return ILibraryMemberRepository.save(libraryMember);
     }
 
     @Transactional(readOnly = true)
     public LibraryMember getMemberById(Long id) {
 
-        return libraryMemberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LibraryMember", id));
+        return ILibraryMemberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LibraryMember", id));
     }
 
     @Transactional(readOnly = true)
@@ -80,7 +80,7 @@ public class LibraryMemberService {
         Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return libraryMemberRepository.findAll(pageable);
+        return ILibraryMemberRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -109,7 +109,7 @@ public class LibraryMemberService {
         Pageable pageable = PageRequest.of(page, size, sortStrategy.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
         Example<LibraryMember> exampleOfLibraryMember = Example.of(libraryMember);
 
-        return libraryMemberRepository.findAll(exampleOfLibraryMember, pageable);
+        return ILibraryMemberRepository.findAll(exampleOfLibraryMember, pageable);
     }
 
 }

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import pl.jsol.bookrental.dal.repository.BookRepository;
+import pl.jsol.bookrental.dal.repository.IBookRepository;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class BookServiceTests {
 
     @Mock
-    private BookRepository bookRepository;
+    private IBookRepository IBookRepository;
     @Mock
     private AuthorService authorService;
 
@@ -49,7 +49,7 @@ public class BookServiceTests {
         Book mockBook = Mockito.mock(Book.class);
         Author mockAuthor = Mockito.mock(Author.class);
 
-        when(bookRepository.save(any(Book.class))).thenReturn(mockBook);
+        when(IBookRepository.save(any(Book.class))).thenReturn(mockBook);
         when(authorService.findAuthorById(1L)).thenReturn(mockAuthor);
 
         assertEquals(mockBook, extendedBookService.addBook("Title", 1L, "BookGenre"));
