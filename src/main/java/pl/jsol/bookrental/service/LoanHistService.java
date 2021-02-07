@@ -1,5 +1,6 @@
 package pl.jsol.bookrental.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,12 +21,12 @@ public class LoanHistService {
     private final ILoanHistRepository ILoanHistRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public LoanHist addLoanHist(Loan loan) {
+    public LoanHist addLoanHist(@NonNull Loan loan) {
         return ILoanHistRepository.save(new LoanHist(loan));
     }
 
     @Transactional(readOnly = true)
-    public Optional<LoanHist> getLoanHistById(Long id) {
+    public Optional<LoanHist> getLoanHistById(@NonNull Long id) {
         return ILoanHistRepository.findById(id);
     }
 

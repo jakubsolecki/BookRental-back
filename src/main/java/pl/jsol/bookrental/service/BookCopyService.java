@@ -1,5 +1,6 @@
 package pl.jsol.bookrental.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +18,14 @@ public class BookCopyService {
     private final BookService bookService;
 
     @Transactional(rollbackFor = Exception.class)
-    public BookCopy addBookCopy(Long bookId) {
+    public BookCopy addBookCopy(@NonNull Long bookId) {
 
         Book book = bookService.getBookById(bookId);
         return IBookCopyRepository.save(new BookCopy(book));
     }
 
     @Transactional(readOnly = true)
-    public Optional<BookCopy> getBookCopyById(Long id) {
+    public Optional<BookCopy> getBookCopyById(@NonNull Long id) {
         return IBookCopyRepository.findById(id);
     }
 }

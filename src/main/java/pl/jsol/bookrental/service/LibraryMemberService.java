@@ -23,37 +23,23 @@ public class LibraryMemberService {
     private static final Pattern VALID_PHONE_REGEX = Pattern.compile("^\\d{9}$");
 
     @Transactional(rollbackFor = Exception.class)
-    public LibraryMember addMember(String firstName,
-                                   String lastName,
-                                   String phone,
-                                   String email,
-                                   String city,
-                                   String street,
-                                   String zip) throws IllegalArgumentException {
+    public LibraryMember addMember(
+            String firstName,
+            String lastName,
+            String phone,
+            String email,
+            String city,
+            String street,
+            String zip
+    ) throws IllegalArgumentException {
 
         if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) {
-           throw new IllegalArgumentException("String cannot be null or empty");
+           throw new IllegalArgumentException("Parameters cannot be null nor empty");
         }
 
-        if(!VALID_EMAIL_REGEX.matcher(email).matches()) {
-            throw new IllegalArgumentException("Invalid email");
-        }
-
-        if(!VALID_PHONE_REGEX.matcher(phone).matches()) {
-            throw new IllegalArgumentException("Invalid phone number");
-        }
-
-        if(!VALID_ZIP_REGEX.matcher(zip).matches()) {
-            throw new IllegalArgumentException("Invalid zip code");
-        }
-
-        if(!ILibraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
-            throw new IllegalArgumentException("Email " + email + " is already taken");
-        }
-
-        if(!ILibraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
-            throw new IllegalArgumentException("Phone " + phone + " is already assigned to the existing library member");
-        }
+        verifyEmail(email);
+        verifyPhone(phone);
+        verifyZip(zip);
 
         LibraryMember libraryMember = LibraryMember.builder()
                 .firstName(firstName)
@@ -84,18 +70,19 @@ public class LibraryMemberService {
     }
 
     @Transactional(readOnly = true)
-    public Page<LibraryMember> getLibraryMembersByExample(int page,
-                                                          int size,
-                                                          String firstName,
-                                                          String lastName,
-                                                          String phone,
-                                                          String email,
-                                                          String city,
-                                                          String street,
-                                                          String zip,
-                                                          String sortStrategy,
-                                                          String sortBy) {
-
+    public Page<LibraryMember> getLibraryMembersByExample(
+            int page,
+            int size,
+            String firstName,
+            String lastName,
+            String phone,
+            String email,
+            String city,
+            String street,
+            String zip,
+            String sortStrategy,
+            String sortBy
+    ) {
         LibraryMember libraryMember = LibraryMember.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -110,6 +97,32 @@ public class LibraryMemberService {
         Example<LibraryMember> exampleOfLibraryMember = Example.of(libraryMember);
 
         return ILibraryMemberRepository.findAll(exampleOfLibraryMember, pageable);
+    }
+
+    private void verifyEmail(String email) throws IllegalArgumentException {
+        if(!VALID_EMAIL_REGEX.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+
+        if(!ILibraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
+            throw new IllegalArgumentException("Email " + email + " is already taken");
+        }
+    }
+
+    private void verifyPhone(String phone) throws IllegalArgumentException {
+        if(!VALID_PHONE_REGEX.matcher(phone).matches()) {
+            throw new IllegalArgumentException("Invalid phone number");
+        }
+
+        if(!ILibraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
+            throw new IllegalArgumentException("Phone " + phone + " is already assigned to the existing library member");
+        }
+    }
+
+    private void verifyZip(String zip) throws IllegalArgumentException {
+        if(!VALID_ZIP_REGEX.matcher(zip).matches()) {
+            throw new IllegalArgumentException("Invalid zip code");
+        }
     }
 
 }

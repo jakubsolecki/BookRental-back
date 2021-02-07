@@ -10,11 +10,12 @@ import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.BookCopy;
-import pl.jsol.bookrental.model.DataSchema;
+import pl.jsol.bookrental.model.DatabaseId;
 import pl.jsol.bookrental.service.BookCopyService;
 import pl.jsol.bookrental.service.BookService;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -47,7 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/copies")
-    public Set<BookCopy> getCopiesOfBook(Long bookId) {
+    public List<BookCopy> getCopiesOfBook(Long bookId) {
 
         try {
             return bookService.getBookById(bookId).getCopies();
@@ -68,7 +69,7 @@ public class BookController {
             Link selfLink = linkTo(BookController.class).slash(book.getId()).withSelfRel();
             return book.add(selfLink);
         } catch (ResourceAlreadyExistsException ex) {
-            DataSchema<?> existingBook = ex.getExistingEntity();
+            DatabaseId<?> existingBook = ex.getExistingEntity();
             URI selfLink = linkTo(BookController.class).slash(existingBook.getId()).toUri();
 
             throw new ResponseStatusException(HttpStatus.SEE_OTHER, selfLink.toString(), ex);

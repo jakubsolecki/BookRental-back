@@ -1,6 +1,7 @@
 package pl.jsol.bookrental.service;
 
 import javassist.tools.reflect.CannotCreateException;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,8 +25,8 @@ public class LoanService {
     private final BookService bookService;
 
     @Transactional(rollbackFor = Exception.class)
-    public Loan addLoan(Long libraryMemberId, Long bookId) throws CannotCreateException {
-        Loan loan = null;
+    public Loan addLoan(@NonNull Long libraryMemberId, @NonNull Long bookId) throws CannotCreateException {
+        Loan loan;
         LibraryMember libraryMember = libraryMemberService.getMemberById(libraryMemberId);
         Book book = bookService.getBookById(bookId);
 
@@ -39,7 +40,7 @@ public class LoanService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Loan> getLoanById(Long id) {
+    public Optional<Loan> getLoanById(@NonNull Long id) {
         return loanRepository.findById(id);
     }
 

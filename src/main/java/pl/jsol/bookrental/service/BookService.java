@@ -17,15 +17,16 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BookService {
+
     protected final IBookRepository IBookRepository;
     private final AuthorService authorService;
 
     @Transactional(rollbackFor = Exception.class)
-    public Book addBook(@NonNull String title, @NonNull Long authorId, @NonNull String genre)
+    public Book addBook(String title, Long authorId, String genre)
             throws IllegalArgumentException, ResourceAlreadyExistsException, EntityNotFoundException {
 
         if(StringUtils.isAnyEmpty(title, genre) || authorId == null) {
-            throw new IllegalArgumentException("Argument cannot be null or empty.");
+            throw new IllegalArgumentException("Parameters cannot be null nor empty.");
         }
 
         Author author = authorService.findAuthorById(authorId);
@@ -52,22 +53,22 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Book> getAllBooks(int page, int size, String sort, String sortBy) {
+    public Page<Book> getAllBooks(int page, int size, Sort.Direction sortDirection, String sortBy) {
 
-        Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
-
         return IBookRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<Book> getBooksByExample(int page,
-                                        int size,
-                                        String title,
-                                        Author author,
-                                        String genre,
-                                        String sort,
-                                        String sortBy) {
+    public Page<Book> getBooksByExample(
+            int page,
+            int size,
+            String title,
+            Author author,
+            String genre,
+            Sort.Direction sortDirection,
+            String sortBy
+    ) {
 
         Book book = Book.builder()
                 .title(title)
@@ -80,14 +81,13 @@ public class BookService {
                 .withIgnoreNullValues()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Book> exampleOfBook = Example.of(book, bookMatcher);
-        Sort.Direction sortDirection = sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
         return IBookRepository.findAll(exampleOfBook, pageable);
     }
 
     @Transactional(readOnly = true)
-    protected Optional<Book> verifyBookExistence(Book book) {
+    protected Optional<Book> verifyBookExistence(@NonNull Book book) {
 
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Book> bookExample = Example.of(book, exampleMatcher);

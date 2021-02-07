@@ -13,18 +13,17 @@ import pl.jsol.bookrental.model.Author;
 
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 public class AuthorService {
 
     private final IAuthorRepository IAuthorRepository;
 
-    @Transactional(rollbackFor = Exception.class)
-    public Author addAuthor(@NonNull String firstName, @NonNull String lastName) {
+    @Transactional(rollbackFor = { Exception.class })
+    public Author addAuthor(String firstName, String lastName) throws IllegalArgumentException, ResourceAlreadyExistsException {
 
         if(StringUtils.isAnyEmpty(firstName, lastName)) {
-            throw new IllegalArgumentException("Argument cannot be empty.");
+            throw new IllegalArgumentException("Parameters cannot be null nor empty.");
         }
 
         Author newAuthor = new Author(firstName, lastName);
@@ -39,16 +38,13 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Author> getAllAuthors(int page, int size, String sort, String sortBy) {
-
-        Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
+    public Page<Author> getAllAuthors(int page, int size, @NonNull Sort.Direction sortDirection, @NonNull String sortBy) {
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
-
         return IAuthorRepository.findAll(pageable);
     }
 
     @Transactional
-    public Author findAuthorById(@NonNull Long id) {
+    public Author findAuthorById(@NonNull Long id) throws EntityNotFoundException {
         return IAuthorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
     }
 
