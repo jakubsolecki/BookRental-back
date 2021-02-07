@@ -41,7 +41,7 @@ public class LibraryMember extends DatabaseId<LibraryMember> {
                          String street,
                          String zip) {
 
-        if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) {
+        if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) { // TODO conflicts with find-by-example strategy
            throw new IllegalArgumentException("Parameters cannot be null nor empty!");
         }
 
