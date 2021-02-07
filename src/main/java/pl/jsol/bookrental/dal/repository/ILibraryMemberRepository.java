@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ILibraryMemberRepository extends JpaRepository<LibraryMember, Long> {
-    @Query("select lm from LibraryMember lm where lm.email like ?1")
+    @Query("SELECT lm FROM LibraryMember lm WHERE lm.email LIKE ?1")
     List<LibraryMember> findLibraryMembersWithEmail(String email);
 
-    @Query("select lm from LibraryMember lm where lm.phone like ?1")
+    @Query("SELECT lm FROM LibraryMember lm WHERE lm.phone LIKE ?1")
     List<LibraryMember> findLibraryMembersWithPhone(String phone);
 }
