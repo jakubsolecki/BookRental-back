@@ -3,14 +3,12 @@ package pl.jsol.bookrental.model;
 import lombok.*;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 
-import javax.naming.CannotProceedException;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 
 @Entity
-@Getter
 @NoArgsConstructor
+@Data
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Loan {
     @Id
@@ -33,8 +31,8 @@ public class Loan {
     @NonNull
     protected LocalDate dueDate;
 
-    public Loan(LibraryMember libraryMember, Book book) throws NoCopiesAvailableException {
-        BookCopy bookedBookCopy = null;
+    public Loan(@NonNull LibraryMember libraryMember, @NonNull Book book) throws NoCopiesAvailableException {
+        BookCopy bookedBookCopy;
 
         try {
             bookedBookCopy = book.getNextAvailableCopy();

@@ -9,7 +9,7 @@ import java.time.Period;
 
 @Entity
 @NoArgsConstructor
-@Getter
+@Data
 public class LoanHist extends Loan {
     @NonNull
     private LocalDate inDate;
@@ -17,10 +17,9 @@ public class LoanHist extends Loan {
     @NonNull
     private BigDecimal penalty;
 
-    @Setter
     private String comments;
 
-    public LoanHist(Loan loan) {
+    public LoanHist(@NonNull Loan loan) {
         libraryMember = loan.getLibraryMember();
         bookCopy = loan.getBookCopy();
         dueDate = loan.getDueDate();

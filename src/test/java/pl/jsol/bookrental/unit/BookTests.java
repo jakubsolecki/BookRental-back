@@ -9,10 +9,9 @@ import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.BookCopy;
 
-import java.util.NoSuchElementException;
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class BookTests {
@@ -23,17 +22,14 @@ public class BookTests {
 
     @BeforeEach
     protected void setUp() {
-
         book = new Book("Title 1", Mockito.mock(Author.class), "fantasy");
 
         bookCopy1 = Mockito.mock(BookCopy.class);
         bookCopy2 = Mockito.mock(BookCopy.class);
-
     }
 
     @Test
     public void addCopy_whenAddCopy_thenReturnCorrectQuantity() {
-
         assertEquals(0, book.getCopiesQuantity());
         assertTrue(book.addCopy(bookCopy1));
         assertEquals(1, book.getCopiesQuantity());
@@ -41,7 +37,6 @@ public class BookTests {
 
     @Test
     public void getNextAvailableCopy_whenAvailableCopy_thenReturnIt() {
-
         when(bookCopy1.isAvailable()).thenReturn(false);
         when(bookCopy2.isAvailable()).thenReturn(true);
         book.addCopy(bookCopy1);
@@ -52,7 +47,6 @@ public class BookTests {
 
     @Test
     public void getNextAvailableCopy_whenNoCopyAvailable_thenExceptionThrown() {
-
         when(bookCopy1.isAvailable()).thenReturn(false);
         when(bookCopy2.isAvailable()).thenReturn(false);
         book.addCopy(bookCopy1);
@@ -63,7 +57,6 @@ public class BookTests {
 
     @Test
     public void getNextAvailableCopy_whenNoCopies_thenExceptionThrown() {
-
         Assertions.assertThrows(NoCopiesAvailableException.class, () -> book.getNextAvailableCopy());
     }
 

@@ -2,14 +2,14 @@ package pl.jsol.bookrental.exceptions;
 
 import lombok.Getter;
 import org.springframework.hateoas.RepresentationModel;
-import pl.jsol.bookrental.model.DataSchema;
+import pl.jsol.bookrental.model.DatabaseId;
 
 @Getter
 public class ResourceAlreadyExistsException extends RuntimeException {
 
-    private final DataSchema<? extends RepresentationModel<?>> existingEntity;
+    private final DatabaseId<? extends RepresentationModel<?>> existingEntity;
 
-    public ResourceAlreadyExistsException(DataSchema<? extends RepresentationModel<?>> existingEntity) {
+    public ResourceAlreadyExistsException(DatabaseId<? extends RepresentationModel<?>> existingEntity) {
         this.existingEntity = existingEntity;
     }
 }

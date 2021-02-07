@@ -1,17 +1,14 @@
 package pl.jsol.bookrental.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Getter
-public class Author extends DataSchema<Author> {
+@Data
+public class Author extends DatabaseId<Author> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -21,11 +18,4 @@ public class Author extends DataSchema<Author> {
 
     @NonNull
     private String lastName;
-
-//    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-//    private final Set<Book> books = new HashSet<>();
-//
-//    public boolean addBook(Book newBook) {
-//        return books.add(newBook);
-//    }
 }

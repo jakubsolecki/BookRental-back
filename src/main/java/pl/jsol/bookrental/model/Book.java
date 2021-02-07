@@ -2,6 +2,7 @@ package pl.jsol.bookrental.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 
 import javax.persistence.*;
@@ -9,10 +10,8 @@ import java.util.*;
 
 @Entity
 @NoArgsConstructor
-@Getter
-@ToString
-@EqualsAndHashCode(callSuper = false)
-public class Book extends DataSchema<Book> {
+@Data
+public class Book extends DatabaseId<Book> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -25,17 +24,21 @@ public class Book extends DataSchema<Book> {
     private BookGenre bookGenre;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "book")
-    private final Set<BookCopy> copies = new HashSet<>();
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private final List<BookCopy> copies = new ArrayList<>();
 
     @Builder
-    public Book(String title, Author author, String genre) {
+    public Book(String title, @NonNull Author author, String genre) {
+        if (StringUtils.isAnyEmpty(title, genre)) {
+            throw new IllegalArgumentException("Book title nor genre cannot be null or empty!");
+        }
+
         this.title = title;
         this.author = author;
-        this.bookGenre = genre == null ? null : BookGenre.fromString(genre);
+        this.bookGenre = BookGenre.fromString(genre);
     }
 
-    public boolean addCopy(BookCopy bookCopy) {
+    public boolean addCopy(@NonNull BookCopy bookCopy) {
         return copies.add(bookCopy);
     }
 
@@ -55,6 +58,6 @@ public class Book extends DataSchema<Book> {
             }
         }
 
-        throw new NoCopiesAvailableException("No copies available for loan!");
+        throw new NoCopiesAvailableException("No copies available!");
     }
 }
