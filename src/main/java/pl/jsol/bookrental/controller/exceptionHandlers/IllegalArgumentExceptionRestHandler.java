@@ -1,19 +1,18 @@
-package pl.jsol.bookrental.exceptionHandlers;
+package pl.jsol.bookrental.controller.exceptionHandlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 
 @ControllerAdvice
-public class NotFoundExceptionRestHandler {
+public class IllegalArgumentExceptionRestHandler {
 
     @ResponseBody
-    @ExceptionHandler({EntityNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    String NotFoundExceptionHandler(EntityNotFoundException ex) {
+    @ExceptionHandler({IllegalArgumentException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String IllegalArgumentExceptionHandler(IllegalArgumentException ex) {
         return ex.getMessage();
     }
 }

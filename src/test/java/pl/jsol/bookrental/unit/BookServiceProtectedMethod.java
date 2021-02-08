@@ -25,6 +25,6 @@ public class BookServiceProtectedMethod extends BookService {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Book> bookExample = Example.of(book, exampleMatcher);
 
-        return IBookRepository.findOne(bookExample);
+        return iBookRepository.findOne(bookExample);
     }
 }

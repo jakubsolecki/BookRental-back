@@ -11,12 +11,10 @@ import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.BookCopy;
 import pl.jsol.bookrental.model.DatabaseId;
-import pl.jsol.bookrental.service.BookCopyService;
 import pl.jsol.bookrental.service.BookService;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -26,16 +24,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class BookController {
 
     private final BookService bookService;
-    private final BookCopyService bookCopyService;
 
     @GetMapping
     public Page<Book> getAllBooks (
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "asc") String sort,
-            @RequestParam(defaultValue = "title") String sortBy) {
+            @RequestParam(defaultValue = "title") String sortBy
+    ) {
+        Page<Book> books = bookService.getAllBooks(page, size, sort, sortBy);
+        books.stream().forEach(b -> b.add(linkTo(BookController.class).slash(b.getId()).withSelfRel()));
 
-        return bookService.getAllBooks(page, size, sort, sortBy);
+        return books;
     }
 
     @GetMapping("/{id}")
@@ -47,11 +47,11 @@ public class BookController {
         return book.add(selfLink);
     }
 
-    @GetMapping("/copies")
-    public List<BookCopy> getCopiesOfBook(Long bookId) {
+    @GetMapping("/{id}/copies")
+    public List<BookCopy> getCopiesOfBook(@PathVariable Long id) {
 
         try {
-            return bookService.getBookById(bookId).getCopies();
+            return bookService.getBookCopies(id);
         } catch (NoCopiesAvailableException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
         }
@@ -62,7 +62,8 @@ public class BookController {
     public Book postBook(
             @RequestParam String title,
             @RequestParam Long authorId,
-            @RequestParam String genre) {
+            @RequestParam String genre
+    ) {
 
         try {
             Book book = bookService.addBook(title, authorId, genre);

@@ -38,8 +38,11 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Author> getAllAuthors(int page, int size, @NonNull Sort.Direction sortDirection, @NonNull String sortBy) {
+    public Page<Author> getAllAuthors(int page, int size, String sort, @NonNull String sortBy) {
+
+        Sort.Direction sortDirection = SortParser.parseSortFromString(sort);
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
+
         return IAuthorRepository.findAll(pageable);
     }
 

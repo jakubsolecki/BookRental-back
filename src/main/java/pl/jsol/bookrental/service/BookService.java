@@ -6,19 +6,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.jsol.bookrental.dal.repository.IBookCopyRepository;
 import pl.jsol.bookrental.dal.repository.IBookRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
+import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Author;
 import pl.jsol.bookrental.model.Book;
+import pl.jsol.bookrental.model.BookCopy;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
 
-    protected final IBookRepository IBookRepository;
+    protected final IBookRepository iBookRepository;
+    private final IBookCopyRepository iBookCopyRepository;
     private final AuthorService authorService;
 
     @Transactional(rollbackFor = Exception.class)
@@ -40,7 +45,7 @@ public class BookService {
         Optional<Book> foundBook = verifyBookExistence(bookToAdd);
 
         if (foundBook.isEmpty()) {
-            return IBookRepository.save(bookToAdd);
+            return iBookRepository.save(bookToAdd);
         }
         else {
             throw new ResourceAlreadyExistsException(foundBook.get());
@@ -49,14 +54,16 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public Book getBookById(Long bookId) throws EntityNotFoundException {
-        return IBookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("Book", bookId));
+        return iBookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("Book", bookId));
     }
 
     @Transactional(readOnly = true)
-    public Page<Book> getAllBooks(int page, int size, Sort.Direction sortDirection, String sortBy) {
+    public Page<Book> getAllBooks(int page, int size, String sort, String sortBy) {
 
+        Sort.Direction sortDirection = SortParser.parseSortFromString(sort);
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
-        return IBookRepository.findAll(pageable);
+
+        return iBookRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -66,7 +73,7 @@ public class BookService {
             String title,
             Author author,
             String genre,
-            Sort.Direction sortDirection,
+            String sort,
             String sortBy
     ) {
 
@@ -76,6 +83,8 @@ public class BookService {
                 .genre(genre)
                 .build();
 
+        Sort.Direction sortDirection = SortParser.parseSortFromString(sort);
+
         ExampleMatcher bookMatcher = ExampleMatcher.matchingAll()
                 .withIgnoreCase()
                 .withIgnoreNullValues()
@@ -83,7 +92,31 @@ public class BookService {
         Example<Book> exampleOfBook = Example.of(book, bookMatcher);
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return IBookRepository.findAll(exampleOfBook, pageable);
+        return iBookRepository.findAll(exampleOfBook, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookCopy> getBookCopies(@NonNull Long bookId) throws EntityNotFoundException {
+
+        Book book = getBookById(bookId);
+
+        if (book.getCopiesQuantity() == 0) {
+            throw new NoCopiesAvailableException("This book has no copies");
+        } else {
+            return book.getCopies();
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public BookCopy addBookCopy(@NonNull Long bookId) {
+
+        Book book = getBookById(bookId);
+        return iBookCopyRepository.save(new BookCopy(book));
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<BookCopy> getBookCopyById(@NonNull Long id) {
+        return iBookCopyRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -92,6 +125,6 @@ public class BookService {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Book> bookExample = Example.of(book, exampleMatcher);
 
-        return IBookRepository.findOne(bookExample);
+        return iBookRepository.findOne(bookExample);
     }
 }
