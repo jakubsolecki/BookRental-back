@@ -108,15 +108,15 @@ public class BookService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public BookCopy addBookCopy(@NonNull Long bookId) {
+    public BookCopy addBookCopy(@NonNull Long bookId) throws EntityNotFoundException {
 
         Book book = getBookById(bookId);
         return iBookCopyRepository.save(new BookCopy(book));
     }
 
     @Transactional(readOnly = true)
-    public Optional<BookCopy> getBookCopyById(@NonNull Long id) {
-        return iBookCopyRepository.findById(id);
+    public BookCopy getBookCopyById(@NonNull Long id) {
+        return iBookCopyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Copy", id));
     }
 
     @Transactional(readOnly = true)

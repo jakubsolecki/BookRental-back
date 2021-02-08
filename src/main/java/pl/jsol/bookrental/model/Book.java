@@ -11,7 +11,7 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @Data
-public class Book extends DatabaseId<Book> {
+public class Book extends RepresentationModelId<Book> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

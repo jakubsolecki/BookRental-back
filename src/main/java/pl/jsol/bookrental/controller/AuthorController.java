@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Author;
-import pl.jsol.bookrental.model.DatabaseId;
+import pl.jsol.bookrental.model.RepresentationModelId;
 import pl.jsol.bookrental.service.AuthorService;
 
 import java.net.URI;
@@ -52,7 +52,7 @@ public class AuthorController {
             Link selfLink = linkTo(AuthorController.class).slash(author.getId()).withSelfRel();
             return author.add(selfLink);
         } catch (ResourceAlreadyExistsException ex) {
-            DatabaseId<?> existingAuthor = ex.getExistingEntity();
+            RepresentationModelId<?> existingAuthor = ex.getExistingEntity();
             URI selfLink = linkTo(AuthorController.class).slash(existingAuthor.getId()).toUri();
 
             throw new ResponseStatusException(HttpStatus.SEE_OTHER, selfLink.toString(), ex);

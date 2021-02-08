@@ -8,7 +8,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class Author extends DatabaseId<Author> {
+public class Author extends RepresentationModelId<Author> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

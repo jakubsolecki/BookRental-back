@@ -10,7 +10,7 @@ import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
 import pl.jsol.bookrental.model.Book;
 import pl.jsol.bookrental.model.BookCopy;
-import pl.jsol.bookrental.model.DatabaseId;
+import pl.jsol.bookrental.model.RepresentationModelId;
 import pl.jsol.bookrental.service.BookService;
 
 import java.net.URI;
@@ -39,7 +39,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable Long id) {
+    public Book getBookById (@PathVariable Long id) {
 
         Book book = bookService.getBookById(id);
         Link selfLink = linkTo(BookController.class).slash(book.getId()).withSelfRel();
@@ -48,7 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}/copies")
-    public List<BookCopy> getCopiesOfBook(@PathVariable Long id) {
+    public List<BookCopy> getCopiesOfBook (@PathVariable Long id) {
 
         try {
             return bookService.getBookCopies(id);
@@ -70,12 +70,31 @@ public class BookController {
             Link selfLink = linkTo(BookController.class).slash(book.getId()).withSelfRel();
             return book.add(selfLink);
         } catch (ResourceAlreadyExistsException ex) {
-            DatabaseId<?> existingBook = ex.getExistingEntity();
+            RepresentationModelId<?> existingBook = ex.getExistingEntity();
             URI selfLink = linkTo(BookController.class).slash(existingBook.getId()).toUri();
 
             throw new ResponseStatusException(HttpStatus.SEE_OTHER, selfLink.toString(), ex);
         }
     }
 
+    @PostMapping("/{id}/copies/")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookCopy postBookCopy(
+            @PathVariable Long id
+    ) {
+        BookCopy bookCopy = bookService.addBookCopy(id);
+        Link selfLink = linkTo(BookController.class)
+                .slash(id)
+                .slash("copies")
+                .slash(bookCopy.getId())
+                .withSelfRel();
+
+        return bookCopy.add(selfLink);
+    }
+
+    @GetMapping("/{bookId}/copies/{copyId}")
+    public BookCopy getBookCopyById (@PathVariable Long bookId, @PathVariable Long copyId) {
+        return bookService.getBookCopyById(copyId);
+    }
 
 }

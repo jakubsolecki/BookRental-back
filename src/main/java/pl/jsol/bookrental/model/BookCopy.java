@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Data
-public class BookCopy {
+public class BookCopy extends RepresentationModelId<BookCopy> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

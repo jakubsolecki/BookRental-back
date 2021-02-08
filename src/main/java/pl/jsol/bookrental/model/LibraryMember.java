@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Data
-public class LibraryMember extends DatabaseId<LibraryMember> {
+public class LibraryMember extends RepresentationModelId<LibraryMember> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -41,7 +41,7 @@ public class LibraryMember extends DatabaseId<LibraryMember> {
                          String street,
                          String zip) {
 
-        if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) { // TODO conflicts with find-by-example strategy
+        if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) { // FIXME conflicts with find-by-example strategy
            throw new IllegalArgumentException("Parameters cannot be null nor empty!");
         }
 
