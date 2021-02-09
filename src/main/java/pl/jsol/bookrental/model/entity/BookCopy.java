@@ -1,5 +1,6 @@
 package pl.jsol.bookrental.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import pl.jsol.bookrental.model.RepresentationModelId;
 
@@ -16,6 +17,7 @@ public class BookCopy extends RepresentationModelId<BookCopy> {
     @NonNull
     private Integer copy_no;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @NonNull
     private Book book;

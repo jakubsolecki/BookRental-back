@@ -46,7 +46,8 @@ public class AuthorService {
         return iAuthorRepository.findAll(pageable);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+
     public Author findAuthorById(@NonNull Long id) throws EntityNotFoundException {
         return iAuthorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
     }

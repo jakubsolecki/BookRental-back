@@ -1,8 +1,11 @@
 package pl.jsol.bookrental.model.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.AbstractDeserializer;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import pl.jsol.bookrental.deserializer.BookDeserializer;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.model.BookGenre;
 import pl.jsol.bookrental.model.RepresentationModelId;
@@ -13,6 +16,7 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @Data
+@JsonDeserialize(using = BookDeserializer.class)
 public class Book extends RepresentationModelId<Book> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,6 +31,7 @@ public class Book extends RepresentationModelId<Book> {
     @Enumerated(EnumType.STRING)
     private BookGenre bookGenre;
 
+    @JsonManagedReference
     @ToString.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private final List<BookCopy> copies = new ArrayList<>();
@@ -36,7 +41,6 @@ public class Book extends RepresentationModelId<Book> {
         if (StringUtils.isAnyEmpty(title, genre)) {
             throw new IllegalArgumentException("Book title nor genre cannot be null or empty!");
         }
-
         this.title = title;
         this.author = author;
         this.bookGenre = BookGenre.toEnum(genre);

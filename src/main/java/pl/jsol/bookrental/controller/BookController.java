@@ -30,7 +30,6 @@ public class BookController {
 
     private final BookService bookService;
     private final PagedResourcesAssembler<Book> bookPRAssembler;
-    private final PagedResourcesAssembler<BookCopy> bookCopyPRAssembler;
 
     @GetMapping
     public PagedModel<EntityModel<Book>> getAllBooks (
@@ -77,7 +76,7 @@ public class BookController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
     public Book postBook (@RequestBody Book book) {
 

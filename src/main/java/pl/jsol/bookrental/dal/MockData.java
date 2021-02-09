@@ -22,7 +22,7 @@ public class MockData {
         IAuthorRepository.save(author1);
         IAuthorRepository.save(author2);
         for (int i = 0; i < 10; i++) {
-            IBookRepository.save(new Book("Title " + i, i % 2 == 0 ? author1 : author2, "genre"));
+            IBookRepository.save(new Book("Title " + i, i % 2 == 0 ? author1 : author2, "Fantasy"));
             if(i % 2 == 0) {
                 IAuthorRepository.save(author1);
             }
