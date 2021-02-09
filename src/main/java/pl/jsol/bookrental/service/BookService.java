@@ -26,6 +26,7 @@ public class BookService {
     private final IBookCopyRepository iBookCopyRepository;
     private final AuthorService authorService;
 
+    @Deprecated // TODO remove
     @Transactional(rollbackFor = Exception.class)
     public Book addBook(String title, Long authorId, String genre)
             throws IllegalArgumentException, ResourceAlreadyExistsException, EntityNotFoundException {

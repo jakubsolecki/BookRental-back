@@ -2,7 +2,10 @@ package pl.jsol.bookrental.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,18 +24,22 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class AuthorController {
 
     private final AuthorService authorService;
+    private final PagedResourcesAssembler<Author> authorPRAssembler;
 
     @GetMapping
-    public Page<Author> getAllAuthors(
+    public PagedModel<EntityModel<Author>> getAllAuthors(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "asc") String sort,
             @RequestParam(defaultValue = "lastName") String sortBy
     ) {
         Page<Author> authors = authorService.getAllAuthors(page, size, sort, sortBy);
-        authors.forEach(a -> a.add(linkTo(AuthorController.class).slash(a.getId()).withSelfRel()));
 
-        return authors;
+        for (var a : authors) {
+            a.add(linkTo(AuthorController.class).slash(a.getId()).withSelfRel());
+        }
+
+        return authorPRAssembler.toModel(authors);
     }
 
     @GetMapping(value = "/{id}")
@@ -46,15 +53,12 @@ public class AuthorController {
 
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Author postAuthor(
-            @RequestParam String firstName,
-            @RequestParam String lastName
-    ) {
+    public Author postAuthor(@RequestBody Author author) {
 
         try {
-            Author author = authorService.addAuthor(firstName, lastName);
-            Link selfLink = linkTo(AuthorController.class).slash(author.getId()).withSelfRel();
-            return author.add(selfLink);
+            Author postedAuthor = authorService.addAuthor(author);
+            Link selfLink = linkTo(AuthorController.class).slash(postedAuthor.getId()).withSelfRel();
+            return postedAuthor.add(selfLink);
         } catch (ResourceAlreadyExistsException ex) {
             RepresentationModelId<?> existingAuthor = ex.getExistingEntity();
             URI selfLink = linkTo(AuthorController.class).slash(existingAuthor.getId()).toUri();

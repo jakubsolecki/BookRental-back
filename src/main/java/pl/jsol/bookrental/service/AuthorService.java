@@ -19,6 +19,7 @@ public class AuthorService {
 
     private final IAuthorRepository iAuthorRepository;
 
+    @Deprecated // TODO remove
     @Transactional(rollbackFor = { Exception.class })
     public Author addAuthor(String firstName, String lastName) throws IllegalArgumentException, ResourceAlreadyExistsException {
 
@@ -31,6 +32,19 @@ public class AuthorService {
 
         if(foundAuthor.isEmpty()) {
             return iAuthorRepository.save(newAuthor);
+        }
+        else {
+            throw new ResourceAlreadyExistsException((foundAuthor.get()));
+        }
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public Author addAuthor(@NonNull Author author) throws IllegalArgumentException, ResourceAlreadyExistsException {
+
+        Optional<Author> foundAuthor = verifyAuthorExistence(author);
+
+        if(foundAuthor.isEmpty()) {
+            return iAuthorRepository.save(author);
         }
         else {
             throw new ResourceAlreadyExistsException((foundAuthor.get()));
