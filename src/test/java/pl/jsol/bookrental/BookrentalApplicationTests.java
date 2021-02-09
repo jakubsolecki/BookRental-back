@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import pl.jsol.bookrental.model.Book;
+import pl.jsol.bookrental.model.entity.Book;
 import pl.jsol.bookrental.service.BookService;
 
 @SpringBootTest

@@ -8,8 +8,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import pl.jsol.bookrental.dal.repository.IBookRepository;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
-import pl.jsol.bookrental.model.Author;
-import pl.jsol.bookrental.model.Book;
+import pl.jsol.bookrental.model.entity.Author;
+import pl.jsol.bookrental.model.entity.Book;
 import pl.jsol.bookrental.service.AuthorService;
 
 import java.util.Optional;

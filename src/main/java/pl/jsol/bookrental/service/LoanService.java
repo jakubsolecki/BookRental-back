@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.ILoanRepository;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
-import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.LibraryMember;
-import pl.jsol.bookrental.model.Loan;
+import pl.jsol.bookrental.model.entity.Book;
+import pl.jsol.bookrental.model.entity.LibraryMember;
+import pl.jsol.bookrental.model.entity.Loan;
 
 import java.util.Optional;
 

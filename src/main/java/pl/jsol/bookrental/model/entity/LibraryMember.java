@@ -1,7 +1,8 @@
-package pl.jsol.bookrental.model;
+package pl.jsol.bookrental.model.entity;
 
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import pl.jsol.bookrental.model.RepresentationModelId;
 
 import javax.persistence.*;
 
@@ -20,9 +21,11 @@ public class LibraryMember extends RepresentationModelId<LibraryMember> {
     private String lastName;
 
     @NonNull
+    @Column(unique = true)
     private String phone;
 
     @NonNull
+    @Column(unique = true)
     private String email;
 
     @NonNull

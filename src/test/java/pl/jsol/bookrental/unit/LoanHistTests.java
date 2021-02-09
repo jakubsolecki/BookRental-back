@@ -3,10 +3,10 @@ package pl.jsol.bookrental.unit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import pl.jsol.bookrental.model.BookCopy;
-import pl.jsol.bookrental.model.Loan;
-import pl.jsol.bookrental.model.LoanHist;
-import pl.jsol.bookrental.model.LibraryMember;
+import pl.jsol.bookrental.model.entity.BookCopy;
+import pl.jsol.bookrental.model.entity.Loan;
+import pl.jsol.bookrental.model.entity.LoanHist;
+import pl.jsol.bookrental.model.entity.LibraryMember;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.jsol.bookrental.dal.repository.IAuthorRepository;
 import pl.jsol.bookrental.dal.repository.IBookRepository;
-import pl.jsol.bookrental.model.Author;
-import pl.jsol.bookrental.model.Book;
+import pl.jsol.bookrental.model.entity.Author;
+import pl.jsol.bookrental.model.entity.Book;
 
 import javax.annotation.PostConstruct;
 

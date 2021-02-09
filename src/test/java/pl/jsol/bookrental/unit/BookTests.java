@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
-import pl.jsol.bookrental.model.Author;
-import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.BookCopy;
+import pl.jsol.bookrental.model.entity.Author;
+import pl.jsol.bookrental.model.entity.Book;
+import pl.jsol.bookrental.model.entity.BookCopy;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;

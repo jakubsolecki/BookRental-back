@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.ILoanHistRepository;
-import pl.jsol.bookrental.model.Loan;
-import pl.jsol.bookrental.model.LoanHist;
+import pl.jsol.bookrental.model.entity.Loan;
+import pl.jsol.bookrental.model.entity.LoanHist;
 
 import java.util.Optional;
 

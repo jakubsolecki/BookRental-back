@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.IAuthorRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
-import pl.jsol.bookrental.model.Author;
+import pl.jsol.bookrental.model.entity.Author;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorService {
 
-    private final IAuthorRepository IAuthorRepository;
+    private final IAuthorRepository iAuthorRepository;
 
     @Transactional(rollbackFor = { Exception.class })
     public Author addAuthor(String firstName, String lastName) throws IllegalArgumentException, ResourceAlreadyExistsException {
@@ -30,7 +30,7 @@ public class AuthorService {
         Optional<Author> foundAuthor = verifyAuthorExistence(newAuthor);
 
         if(foundAuthor.isEmpty()) {
-            return IAuthorRepository.save(newAuthor);
+            return iAuthorRepository.save(newAuthor);
         }
         else {
             throw new ResourceAlreadyExistsException((foundAuthor.get()));
@@ -43,12 +43,12 @@ public class AuthorService {
         Sort.Direction sortDirection = SortParser.parseSortFromString(sort);
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return IAuthorRepository.findAll(pageable);
+        return iAuthorRepository.findAll(pageable);
     }
 
     @Transactional
     public Author findAuthorById(@NonNull Long id) throws EntityNotFoundException {
-        return IAuthorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
+        return iAuthorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author", id));
     }
 
     @Transactional(readOnly = true)
@@ -57,6 +57,6 @@ public class AuthorService {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("id");
         Example<Author> authorExample = Example.of(author, exampleMatcher);
 
-        return IAuthorRepository.findOne(authorExample);
+        return iAuthorRepository.findOne(authorExample);
     }
 }

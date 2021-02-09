@@ -4,11 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
-import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
-import pl.jsol.bookrental.model.LibraryMember;
+import pl.jsol.bookrental.model.entity.LibraryMember;
 import pl.jsol.bookrental.service.LibraryMemberService;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 

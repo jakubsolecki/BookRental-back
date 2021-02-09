@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
-import pl.jsol.bookrental.model.Author;
+import pl.jsol.bookrental.model.entity.Author;
 import pl.jsol.bookrental.model.RepresentationModelId;
 import pl.jsol.bookrental.service.AuthorService;
 
@@ -27,9 +27,12 @@ public class AuthorController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "asc") String sort,
-            @RequestParam(defaultValue = "lastName") String sortBy) {
+            @RequestParam(defaultValue = "lastName") String sortBy
+    ) {
+        Page<Author> authors = authorService.getAllAuthors(page, size, sort, sortBy);
+        authors.forEach(a -> a.add(linkTo(AuthorController.class).slash(a.getId()).withSelfRel()));
 
-        return authorService.getAllAuthors(page, size, sort, sortBy);
+        return authors;
     }
 
     @GetMapping(value = "/{id}")
@@ -45,7 +48,8 @@ public class AuthorController {
     @ResponseStatus(HttpStatus.CREATED)
     public Author postAuthor(
             @RequestParam String firstName,
-            @RequestParam String lastName) {
+            @RequestParam String lastName
+    ) {
 
         try {
             Author author = authorService.addAuthor(firstName, lastName);

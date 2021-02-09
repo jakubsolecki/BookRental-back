@@ -1,9 +1,11 @@
-package pl.jsol.bookrental.model;
+package pl.jsol.bookrental.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
+import pl.jsol.bookrental.model.BookGenre;
+import pl.jsol.bookrental.model.RepresentationModelId;
 
 import javax.persistence.*;
 import java.util.*;
@@ -19,8 +21,10 @@ public class Book extends RepresentationModelId<Book> {
     private String title;
 
     @ManyToOne
+    @JsonIgnoreProperties({"firstName", "lastName"})
     private Author author;
 
+    @Enumerated(EnumType.STRING)
     private BookGenre bookGenre;
 
     @ToString.Exclude
@@ -35,7 +39,7 @@ public class Book extends RepresentationModelId<Book> {
 
         this.title = title;
         this.author = author;
-        this.bookGenre = BookGenre.fromString(genre);
+        this.bookGenre = BookGenre.toEnum(genre);
     }
 
     public boolean addCopy(@NonNull BookCopy bookCopy) {

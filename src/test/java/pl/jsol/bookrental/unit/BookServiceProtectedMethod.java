@@ -6,7 +6,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.IBookCopyRepository;
 import pl.jsol.bookrental.dal.repository.IBookRepository;
-import pl.jsol.bookrental.model.Book;
+import pl.jsol.bookrental.model.entity.Book;
 import pl.jsol.bookrental.service.AuthorService;
 import pl.jsol.bookrental.service.BookService;
 

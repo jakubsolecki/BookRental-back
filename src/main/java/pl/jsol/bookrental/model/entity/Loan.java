@@ -1,4 +1,4 @@
-package pl.jsol.bookrental.model;
+package pl.jsol.bookrental.model.entity;
 
 import lombok.*;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;

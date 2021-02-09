@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jsol.bookrental.dal.repository.ILibraryMemberRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
-import pl.jsol.bookrental.model.LibraryMember;
+import pl.jsol.bookrental.model.entity.LibraryMember;
 
 import java.util.regex.Pattern;
 

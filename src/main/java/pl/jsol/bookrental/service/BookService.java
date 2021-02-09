@@ -11,9 +11,9 @@ import pl.jsol.bookrental.dal.repository.IBookRepository;
 import pl.jsol.bookrental.exceptions.EntityNotFoundException;
 import pl.jsol.bookrental.exceptions.NoCopiesAvailableException;
 import pl.jsol.bookrental.exceptions.ResourceAlreadyExistsException;
-import pl.jsol.bookrental.model.Author;
-import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.BookCopy;
+import pl.jsol.bookrental.model.entity.Author;
+import pl.jsol.bookrental.model.entity.Book;
+import pl.jsol.bookrental.model.entity.BookCopy;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +46,20 @@ public class BookService {
 
         if (foundBook.isEmpty()) {
             return iBookRepository.save(bookToAdd);
+        }
+        else {
+            throw new ResourceAlreadyExistsException(foundBook.get());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Book addBook(@NonNull Book book)
+            throws IllegalArgumentException, ResourceAlreadyExistsException, EntityNotFoundException {
+
+        Optional<Book> foundBook = verifyBookExistence(book);
+
+        if (foundBook.isEmpty()) {
+            return iBookRepository.save(book);
         }
         else {
             throw new ResourceAlreadyExistsException(foundBook.get());

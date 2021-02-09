@@ -2,11 +2,10 @@ package pl.jsol.bookrental.unit;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import pl.jsol.bookrental.model.Book;
-import pl.jsol.bookrental.model.Loan;
-import pl.jsol.bookrental.model.LibraryMember;
+import pl.jsol.bookrental.model.entity.Book;
+import pl.jsol.bookrental.model.entity.Loan;
+import pl.jsol.bookrental.model.entity.LibraryMember;
 
-import javax.naming.CannotProceedException;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
