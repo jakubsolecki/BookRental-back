@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
@@ -13,7 +14,7 @@ public class IllegalArgumentExceptionRestHandler {
     @ResponseBody
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView IllegalArgumentExceptionHandler(IllegalArgumentException ex) {
+    public ModelAndView IllegalArgumentExceptionHandler(IllegalArgumentException ex) throws ResponseStatusException {
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", ex);
         return mav;

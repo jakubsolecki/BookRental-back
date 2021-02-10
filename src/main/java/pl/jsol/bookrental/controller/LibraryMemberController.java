@@ -1,12 +1,19 @@
 package pl.jsol.bookrental.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.jsol.bookrental.model.entity.LibraryMember;
 import pl.jsol.bookrental.service.LibraryMemberService;
 
@@ -19,6 +26,7 @@ public class LibraryMemberController {
 
     private final LibraryMemberService libraryMemberService;
     private final PagedResourcesAssembler<LibraryMember> libraryMemberPRAssembler;
+    private final ObjectMapper objectMapper;
 
     @GetMapping
     public PagedModel<EntityModel<LibraryMember>> getAllLibraryMembers(
@@ -50,8 +58,27 @@ public class LibraryMemberController {
         return newMember.add(selfLink);
     }
 
-    @PutMapping("/{id}")
-    public LibraryMember putLibraryMember(@RequestBody LibraryMember libraryMember) {
-        return null; // TODO
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    public LibraryMember patchLibraryMember(@PathVariable Long id, @RequestBody JsonPatch patch) {
+
+        try {
+            LibraryMember oldMember = libraryMemberService.getMemberById(id);
+            LibraryMember updatedMember = patchLibraryMember(oldMember, patch);
+            updatedMember = libraryMemberService.updateLibraryMember(updatedMember);
+            Link selfLink = linkTo(LibraryMemberController.class).slash(updatedMember.getId()).withSelfRel();
+
+            return updatedMember.add(selfLink);
+        } catch (JsonProcessingException | JsonPatchException jex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, jex.getMessage());
+        }
+
+    }
+
+    private LibraryMember patchLibraryMember(
+            LibraryMember memberToPatch,
+            JsonPatch patch
+    ) throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(objectMapper.convertValue(memberToPatch, JsonNode.class));
+        return objectMapper.treeToValue(patched, LibraryMember.class);
     }
 }

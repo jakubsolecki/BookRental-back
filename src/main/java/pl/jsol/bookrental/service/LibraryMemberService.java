@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class LibraryMemberService {
 
-    private final ILibraryMemberRepository ILibraryMemberRepository;
+    private final ILibraryMemberRepository iLibraryMemberRepository;
     private static final Pattern VALID_EMAIL_REGEX =
             Pattern.compile("^\\w+\\.?\\w+@\\w+\\.[a-z]+\\.?[a-z]+$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_ZIP_REGEX = Pattern.compile("^\\d{2}-\\d{3}$");
@@ -53,7 +53,7 @@ public class LibraryMemberService {
                 .zip(zip)
                 .build();
 
-        return ILibraryMemberRepository.save(libraryMember);
+        return iLibraryMemberRepository.save(libraryMember);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -68,13 +68,13 @@ public class LibraryMemberService {
             throw new IllegalArgumentException("Address must be specified as an embedded object");
         }
 
-        return ILibraryMemberRepository.save(libraryMember);
+        return iLibraryMemberRepository.save(libraryMember);
     }
 
     @Transactional(readOnly = true)
     public LibraryMember getMemberById(Long id) {
 
-        return ILibraryMemberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LibraryMember", id));
+        return iLibraryMemberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("LibraryMember", id));
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ public class LibraryMemberService {
         Sort.Direction sortDirection = (sort != null && sort.equals("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
 
-        return ILibraryMemberRepository.findAll(pageable);
+        return iLibraryMemberRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +113,12 @@ public class LibraryMemberService {
         Pageable pageable = PageRequest.of(page, size, sortStrategy.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
         Example<LibraryMember> exampleOfLibraryMember = Example.of(libraryMember);
 
-        return ILibraryMemberRepository.findAll(exampleOfLibraryMember, pageable);
+        return iLibraryMemberRepository.findAll(exampleOfLibraryMember, pageable);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public LibraryMember updateLibraryMember(@NonNull LibraryMember libraryMember) {
+        return iLibraryMemberRepository.save(libraryMember);
     }
 
     private void verifyEmail(String email) throws IllegalArgumentException {
@@ -121,7 +126,7 @@ public class LibraryMemberService {
             throw new IllegalArgumentException("Invalid email");
         }
 
-        if(!ILibraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
+        if(!iLibraryMemberRepository.findLibraryMembersWithEmail(email).isEmpty()) {
             throw new IllegalArgumentException("Email " + email + " is already taken");
         }
     }
@@ -131,7 +136,7 @@ public class LibraryMemberService {
             throw new IllegalArgumentException("Invalid phone number");
         }
 
-        if(!ILibraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
+        if(!iLibraryMemberRepository.findLibraryMembersWithPhone(phone).isEmpty()) {
             throw new IllegalArgumentException("Phone " + phone + " is already assigned to the existing library member");
         }
     }

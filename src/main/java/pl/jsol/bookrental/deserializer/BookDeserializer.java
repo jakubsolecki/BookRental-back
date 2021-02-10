@@ -18,12 +18,18 @@ public class BookDeserializer extends JsonDeserializer<Book> {
 
     private final AuthorService authorService;
 
+    // TODO handling exceptions using my handlers for controllers
     @Override
-    public Book deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, EntityNotFoundException {
-        ObjectCodec oc = jsonParser.getCodec();
-        JsonNode node = oc.readTree(jsonParser);
-        Author author = authorService.findAuthorById(node.get("authorId").asLong());
+    public Book deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, EntityNotFoundException, IllegalArgumentException {
+        try {
+            ObjectCodec oc = jsonParser.getCodec();
+            JsonNode node = oc.readTree(jsonParser);
+            Long authorId = node.get("authorId").asLong();
+            Author author = authorService.findAuthorById(authorId);
 
-        return new Book(node.get("title").textValue(), author, node.get("genre").textValue());
+            return new Book(node.get("title").textValue(), author, node.get("genre").textValue());
+        } catch (NullPointerException ex) {
+            throw new IllegalArgumentException("Json format does not match Book");
+        }
     }
 }

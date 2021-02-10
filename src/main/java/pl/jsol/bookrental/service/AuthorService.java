@@ -19,7 +19,8 @@ public class AuthorService {
 
     private final IAuthorRepository iAuthorRepository;
 
-    @Deprecated // TODO remove
+    // TODO remove
+    @Deprecated
     @Transactional(rollbackFor = { Exception.class })
     public Author addAuthor(String firstName, String lastName) throws IllegalArgumentException, ResourceAlreadyExistsException {
 
