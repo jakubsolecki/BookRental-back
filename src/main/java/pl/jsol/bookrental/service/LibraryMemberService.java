@@ -1,5 +1,6 @@
 package pl.jsol.bookrental.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.*;
@@ -22,6 +23,7 @@ public class LibraryMemberService {
     private static final Pattern VALID_ZIP_REGEX = Pattern.compile("^\\d{2}-\\d{3}$");
     private static final Pattern VALID_PHONE_REGEX = Pattern.compile("^\\d{9}$");
 
+    @Deprecated
     @Transactional(rollbackFor = Exception.class)
     public LibraryMember addMember(
             String firstName,
@@ -50,6 +52,21 @@ public class LibraryMemberService {
                 .street(street)
                 .zip(zip)
                 .build();
+
+        return ILibraryMemberRepository.save(libraryMember);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public LibraryMember addMember(@NonNull LibraryMember libraryMember) throws IllegalArgumentException {
+
+        verifyEmail(libraryMember.getEmail());
+        verifyPhone(libraryMember.getPhone());
+
+        if (libraryMember.getAddress() != null) {
+            verifyZip(libraryMember.getAddress().getZip());
+        } else {
+            throw new IllegalArgumentException("Address must be specified as an embedded object");
+        }
 
         return ILibraryMemberRepository.save(libraryMember);
     }

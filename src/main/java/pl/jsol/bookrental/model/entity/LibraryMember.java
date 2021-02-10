@@ -3,6 +3,7 @@ package pl.jsol.bookrental.model.entity;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import pl.jsol.bookrental.model.RepresentationModelId;
+import pl.jsol.bookrental.model.UserRole;
 
 import javax.persistence.*;
 
@@ -14,37 +15,40 @@ public class LibraryMember extends RepresentationModelId<LibraryMember> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NonNull
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private UserRole role = UserRole.USER;
+
+    @Column(nullable = false)
     private String firstName;
 
-    @NonNull
+    @Column(nullable = false)
     private String lastName;
 
-    @NonNull
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String phone;
 
-    @NonNull
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NonNull
     @Embedded
+    @Column(nullable = false)
     private Address address;
 
     @ToString.Exclude
     private String comments;
 
     @Builder
-    public LibraryMember(String firstName,
-                         String lastName,
-                         String phone,
-                         String email,
-                         String city,
-                         String street,
-                         String zip) {
-
-        if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) { // FIXME conflicts with find-by-example strategy
+    public LibraryMember(
+            String firstName,
+            String lastName,
+            String phone,
+            String email,
+            String city,
+            String street,
+            String zip
+    ) {
+        if (StringUtils.isAnyEmpty(firstName, lastName, phone, email, city, street, zip)) {
            throw new IllegalArgumentException("Parameters cannot be null nor empty!");
         }
 
